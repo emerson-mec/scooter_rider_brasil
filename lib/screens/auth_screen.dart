@@ -75,7 +75,7 @@ class _AuthScrennState extends State<AuthScrenn> {
                   if(showLogo)  SizedBox(height: 40),
                   if(!showLogo) Padding(
                     padding: const EdgeInsets.only(bottom: 30),
-                    child: Text('Criar conta',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                    child: Text('Criar conta!',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
                   ),
                   AuthForm(_handleSubmit, _mostraLogo),
                   SizedBox(height: 300),
