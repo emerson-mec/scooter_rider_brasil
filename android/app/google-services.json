@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "46127699545",
+    "project_id": "scooter-rider-brasil-6532a",
+    "storage_bucket": "scooter-rider-brasil-6532a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46127699545:android:0520f6868d3b6dd2ee0348",
+        "android_client_info": {
+          "package_name": "br.com.scooterriderbrasil.scooter_rider_brasil"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "46127699545-cl9uk090tttmpvpjnrjroiou1iudgvnh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMCilQ5Y-TDRYvPFkYV8n9shX1980teNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "46127699545-cl9uk090tttmpvpjnrjroiou1iudgvnh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:scooter_rider_brasil/components/auth_card.dart';
 import 'package:scooter_rider_brasil/providers/auth.dart';
 
@@ -12,7 +11,6 @@ class _AuthScrennState extends State<AuthScrenn> {
   bool showLogo = true;
   @override
   Widget build(BuildContext context) {
-    
     void _handleSubmit(Auth authData) {
       if (authData.isLogin) {
         //  print('Está no login');
@@ -21,14 +19,12 @@ class _AuthScrennState extends State<AuthScrenn> {
 
       }
     }
-   
+
     void _mostraLogo(booleano) {
       setState(() {
         showLogo = !showLogo;
       });
     }
-
-      
 
     return Scaffold(
       body: Stack(
@@ -58,25 +54,30 @@ class _AuthScrennState extends State<AuthScrenn> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: MediaQuery.of(context).size.height * .07),
-                 if(showLogo) Container(
-                    height: MediaQuery.of(context).size.width*0.22,
-                    child: Image.asset('assets/logo_srb2.png'),
-                  ),
-                 if(showLogo) Text(
-                    'Scooter Rider',
-                    style: GoogleFonts.blackOpsOne(
-                      textStyle: TextStyle(
-                          color: Colors.black87,
-                          letterSpacing: .5,
-                          fontSize: MediaQuery.of(context).size.width*0.1,
-                        ),
+                  if (showLogo)
+                    Container(
+                      height: MediaQuery.of(context).size.width * 0.22,
+                      child: Image.asset('assets/logo_srb2.png'),
                     ),
-                  ),
-                  if(showLogo)  SizedBox(height: 40),
-                  if(!showLogo) Padding(
-                    padding: const EdgeInsets.only(bottom: 30),
-                    child: Text('Criar conta',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-                  ),
+                  if (showLogo)
+                    Text(
+                      'Scooter Rider',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        letterSpacing: .5,
+                        fontSize: MediaQuery.of(context).size.width * 0.1,
+                      ),
+                    ),
+                  if (showLogo) SizedBox(height: 40),
+                  if (!showLogo)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: Text(
+                        'Criar conta',
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   AuthForm(_handleSubmit, _mostraLogo),
                   SizedBox(height: 300),
                   AuthCard(),
