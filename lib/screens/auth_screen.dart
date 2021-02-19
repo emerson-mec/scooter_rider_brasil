@@ -27,28 +27,21 @@ class _AuthScrennState extends State<AuthScrenn> {
       }
       } on PlatformException catch (err) {
 
-        // final msg = err.message ?? 'Ocorreu um erro! Verifique suas credencias.';
         var msg  ;
-        print(err.code);
+        // final msg = err.message ?? 'Ocorreu um erro! Verifique suas credencias.';
 
         switch (err.code) {
-          case 'ERROR_WRONG_PASSWORD':
-            msg = 'Senha errada';
+          case 'ERROR_WRONG_PASSWORD': msg = 'Senha errada';
             break;
-          case 'ERROR_USER_DISABLED':
-            msg = 'Usuário desativado pelo administrador. Entre em contato com scooterriderbrasil@gmail.com';
+          case 'ERROR_USER_DISABLED': msg = 'Usuário desativado pelo administrador. Entre em contato com scooterriderbrasil@gmail.com';
             break;
-          case 'ERROR_TOO_MANY_REQUESTS':
-            msg = 'Muitas tentativas. Fale conosco pelo e-mail: scooterriderbrasil@gmail.com ou tente tente mais tarde!';
+          case 'ERROR_TOO_MANY_REQUESTS': msg = 'Muitas tentativas. Fale conosco pelo e-mail: scooterriderbrasil@gmail.com ou tente tente mais tarde!';
             break;
-          case 'ERROR_INVALID_EMAIL':
-            msg = 'Endereço de e-mail inválido';
+          case 'ERROR_INVALID_EMAIL': msg = 'Endereço de e-mail inválido';
             break;
-          case 'ERROR_USER_NOT_FOUND':
-            msg = 'Usuário não encontrado';
+          case 'ERROR_USER_NOT_FOUND': msg = 'Usuário não encontrado';
             break;
-          case 'ERROR_OPERATION_NOT_ALLOWED':
-            msg = 'Ocorreu um erro na autenticação.';
+          case 'ERROR_OPERATION_NOT_ALLOWED': msg = 'Ocorreu um erro na autenticação.';
             break;
           default: msg = 'Tentativa de autenticação falhou.\n- Verifique sua internet';
         }
