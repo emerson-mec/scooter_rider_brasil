@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: Color(0xFFffb300),
-          accentColor: Colors.deepPurple,
+          accentColor: Colors.yellow,
           buttonTheme: ButtonTheme.of(context).copyWith(
             buttonColor: Colors.black,
             textTheme: ButtonTextTheme.primary,

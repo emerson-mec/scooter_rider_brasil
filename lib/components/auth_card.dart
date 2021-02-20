@@ -176,7 +176,7 @@ class _AuthCardState extends State<AuthCard> {
 class AuthForm extends StatefulWidget {
   final void Function(Auth authData) onSubmit;
   final void Function(bool) mostrarLogo;
-
+  
   AuthForm(this.onSubmit, this.mostrarLogo);
   @override
   _AuthFormState createState() => _AuthFormState();
@@ -186,6 +186,8 @@ class _AuthFormState extends State<AuthForm> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   Auth _authData = Auth();
 
+
+  // MÉTODO SELECT ESTADO ///////////////////////////////
   final estados = const [
     "Selecione seu estado*",
     "Rio de Janeiro",
@@ -194,13 +196,12 @@ class _AuthFormState extends State<AuthForm> {
     "Santa Catarina",
     "Paraná"
   ];
-
   int selectedIndex = 0;
-
   List<Widget> _buildItem() {
     _authData.estado = estados[selectedIndex];
     return estados.map((val) => MySelectionItem(title: val)).toList();
   }
+  // ACABA MÉTODO SELECT ESTADO ///////////////////////////////
 
   _submit() {
     bool isValid = _formKey.currentState.validate();
@@ -213,7 +214,6 @@ class _AuthFormState extends State<AuthForm> {
       }
     } else if (_authData.isSignup) {
       if (isValid && selectedIndex != 0) {
-        print('Cadastro com dados corretos');
         widget.onSubmit(_authData);
       }
     }
@@ -222,155 +222,160 @@ class _AuthFormState extends State<AuthForm> {
   @override
   Widget build(BuildContext context) {
 
-    return SingleChildScrollView(
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        padding: EdgeInsets.only(bottom: 60,top: 40),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(22),
-          ),
-          border: Border.all(color: Colors.white54,width: 0.5),
-          color:  Colors.white.withOpacity(0.2),
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.only(bottom: 40,top: 30),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
         ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (_authData.isSignup)
-                  Row(
-                    children: [
-                      Center(
-                        child: Text(
-                          "Estado:",
-                          style: TextStyle(
-                            color: selectedIndex == 0
-                                ? Colors.red
-                                : Colors.grey[800],
-                            fontSize: 20,
-                          ),
+        border: Border.all(color: Colors.black38,width: 0.5),
+        color:  Colors.white.withOpacity(0.80),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 20,
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              //ESTADO
+              if (_authData.isSignup)
+                Row(
+                  children: [
+                    Center(
+                      child: Text(
+                        "Estado:",
+                        style: TextStyle(
+                          color: selectedIndex == 0
+                              ? Colors.red
+                              : Colors.grey[800],
+                          fontSize: 20,
                         ),
                       ),
-                      DirectSelect(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        itemExtent: 55.0,
-                        selectedIndex: selectedIndex,
-                        child: MySelectionItem(
-                          isForList: false,
-                          title: estados[selectedIndex],
-                        ),
-                        onSelectedItemChanged: (index) {
-                          setState(() {
-                            selectedIndex = index;
-                          });
-                        },
-                        mode: DirectSelectMode.tap,
-                        items: _buildItem(),
-                      ),
-                    ],
-                  ),
-                if (_authData.isSignup)
-                  TextFormField(
-                    initialValue: _authData
-                        .name, //para restaurar o nome ao alternar entre tela de cadastro e login
-                    key: ValueKey('nome'), //para não embaralha os dados ao alternar tela de cadastro e login
-                    decoration: InputDecoration(
-                      labelText: 'Nome',
-                      labelStyle: TextStyle(color: Colors.grey[800]),
                     ),
-                    style: TextStyle (
-                      color: Colors.white,
-                      fontSize: 20,
-                    ), 
-                    onChanged: (value) => _authData.name = value,
-                    validator: (value) {
-                      if (value == null || value.trim().length < 4) {
-                        return 'nome muito pequeno';
-                      }
-                      return null;
-                    },
-                  ),
-                TextFormField(
-                  key: ValueKey('email'), //para não embaralha os dados ao alternar tela de cadastro e login
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: TextStyle(color: Colors.grey[800]),
-                  ),
-                  style: TextStyle (
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),                  
-                  onChanged: (value) => _authData.emailUser = value,
-                  validator: (value) {
-                    if (value == null ||
-                        !value.contains('@') ||
-                        !value.contains('.')) {
-                      return 'Digite um email válido';
-                    }
-                    return null;
-                  },
+                    DirectSelect(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      itemExtent: 55.0,
+                      selectedIndex: selectedIndex,
+                      child: MySelectionItem(
+                        isForList: false,
+                        title: estados[selectedIndex],
+                      ),
+                      onSelectedItemChanged: (index) {
+                        setState(() {
+                          selectedIndex = index;
+                        });
+                      },
+                      mode: DirectSelectMode.tap,
+                      items: _buildItem(),
+                    ),
+                  ],
                 ),
+              //NOME
+              if (_authData.isSignup)
                 TextFormField(
-                  key: ValueKey('password'), //para não embaralha os dados ao alternar tela de cadastro e login
-                  obscureText: true,
+                  initialValue: _authData
+                      .name, //para restaurar o nome ao alternar entre tela de cadastro e login
+                  key: ValueKey('nome'), //para não embaralha os dados ao alternar tela de cadastro e login
                   decoration: InputDecoration(
-                    labelText: 'Senha',
+                    labelText: 'Nome',
                     labelStyle: TextStyle(color: Colors.grey[800]),
                   ),
                   style: TextStyle (
-                    color: Colors.white,
+                    color: Colors.blue[600],
                     fontSize: 20,
                   ), 
-                  onChanged: (value) => _authData.password = value,
+                  onChanged: (value) => _authData.name = value,
                   validator: (value) {
-                    if (value == null || value.trim().length < 7) {
-                      return 'senha muito pequena';
+                    if (value == null || value.trim().length < 4) {
+                      return 'nome muito pequeno';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 40),
-                RaisedButton(
-                  elevation: 10,
-                  padding: EdgeInsets.symmetric(vertical: 13),
-                  color: _authData.isLogin ? Colors.black87 : Colors.green[500],
+              TextFormField(
+                key: ValueKey('email'), //para não embaralha os dados ao alternar tela de cadastro e login
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: TextStyle(color: Colors.grey[800]),
+                ),
+                style: TextStyle (
+                  color: Colors.blue[600],
+                  fontSize: 20,
+                ),
+                onChanged: (value) => _authData.emailUser = value,
+                validator: (value) {
+                  if (value == null ||
+                      !value.contains('@') ||
+                      !value.contains('.')) {
+                    return 'Digite um email válido';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                key: ValueKey('password'), //para não embaralha os dados ao alternar tela de cadastro e login
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Senha',
+                  labelStyle: TextStyle(color: Colors.grey[800]),
+                ),
+                style: TextStyle (
+                  color: Colors.blue[600],
+                  fontSize: 20,
+                ), 
+                onChanged: (value) => _authData.password = value,
+                validator: (value) {
+                  if (value == null || value.trim().length < 7) {
+                    return 'senha muito pequena';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 40),
+              RaisedButton(
+                elevation: 10,
+                padding: EdgeInsets.symmetric(vertical: 13),
+                color: _authData.isLogin ? Colors.black87 : Colors.green[500],
+                child: Text(
+                  _authData.isLogin ? 'Entrar' : 'Cadastrar',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+                onPressed: _submit,
+              ),
+              SizedBox(height: 20),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.5, color: Colors.black54),
+                ),
+
+                child: TextButton(
                   child: Text(
-                    _authData.isLogin ? 'Entrar' : 'Cadastrar',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                    ),
-                  ),
-                  onPressed: _submit,
-                ),
-                SizedBox(height: 20),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 0.5, color: Colors.black54),
-                  ),
+                    _authData.isLogin
+                      ? 'Criar uma nova conta?'
+                      : 'Já tenho uma contar',style: TextStyle(fontSize: 18, color: Colors.black87, fontWeight: FontWeight.w400),),
+                  onPressed: () {
+                    widget.mostrarLogo(false);
 
-                  child: FlatButton(
-                    
-                    textColor: Colors.black,
-                    child: Text(_authData.isLogin
-                        ? 'Criar uma nova conta?'
-                        : 'Já tenho uma contar',style: TextStyle(fontSize: 18),),
-                    onPressed: () {
-                      
-                      widget.mostrarLogo(false);
+                    FocusScope.of(context).unfocus();
 
-                      FocusScope.of(context).unfocus();
-                      setState(() {
-                        _authData.toggleMode();
-                      });
-                    },
-                  ),
+                    setState(() {
+                      _authData.toggleMode();
+                    });
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -396,27 +401,25 @@ class MySelectionItem extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   title,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
               padding: EdgeInsets.all(10.0),
             )
           : Card(
-            color: Theme.of(context).primaryColor.withOpacity(0.5),
               margin: EdgeInsets.only(left: 5.0),
               child: Stack(
+                //alignment: AlignmentDirectional.centerEnd,
                 children: <Widget>[
                   Container(
                     width: MediaQuery.of(context).size.width * 0.57,
                     alignment: Alignment.center,
-                    child: Text(title, style: TextStyle(color: Colors.white, fontSize: 17),),
+                    child: Text(title, style: TextStyle(color: Colors.black, fontSize: 17),),
                   ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: Icon(Icons.arrow_drop_down),
                   ),
-                  
                 ],
               ),
             ),
