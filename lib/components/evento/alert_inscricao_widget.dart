@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:scooter_rider_brasil/models/evento_model.dart';
-import 'package:scooter_rider_brasil/providers/auth.dart';
+import 'package:scooter_rider_brasil/providers/auth_provider.dart';
 import 'package:scooter_rider_brasil/providers/evento_provider.dart';
 
 class AlertInscricaoWidget extends StatefulWidget {
   final EventoMODEL eventoModalRoute;
-  final Auth auth;
+  final AuthProvider auth;
 
   const AlertInscricaoWidget({
     this.eventoModalRoute,
@@ -108,13 +108,13 @@ class _AlertInscricaoWidgetState extends State<AlertInscricaoWidget> {
           ),
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(
               'Cancelar',
               style: TextStyle(color: Colors.redAccent),
             ),
             onPressed: () {
-              itemRaw.loadInscritos(widget.eventoModalRoute.id);
+              //itemRaw.loadInscritos(widget.eventoModalRoute.id);
               Navigator.of(context).pop();
             },
           ),
@@ -132,8 +132,7 @@ class _AlertInscricaoWidgetState extends State<AlertInscricaoWidget> {
                 vaiComo = itemController.text;
               }
 
-              itemRaw.addInscrito(
-                  widget.eventoModalRoute, widget.auth, vaiComo);
+              // itemRaw.addInscrito( widget.eventoModalRoute, widget.auth, vaiComo);
 
               Navigator.pop(context);
             },

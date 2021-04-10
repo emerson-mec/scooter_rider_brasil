@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:scooter_rider_brasil/exceptions/http_exceptions.dart';
+import 'package:provider/provider.dart';
 import 'package:scooter_rider_brasil/models/evento_model.dart';
 import 'package:scooter_rider_brasil/providers/evento_provider.dart';
 import 'package:scooter_rider_brasil/utils/rotas.dart';
 
 class ItemEventoGerenciado extends StatelessWidget {
   final EventoMODEL item;
-  final EventoProvider itemRAW;
 
-  ItemEventoGerenciado({this.item, this.itemRAW});
+  ItemEventoGerenciado(this.item);
   
   @override
   Widget build(BuildContext context) {
-    final scaffold = Scaffold.of(context);
-
     return Column(
       children: [
+
         ListTile(
+          
+          //NAVEGA PARA PÁGINA DETALHE EVENTO
           onTap: () {
             Navigator.of(context).pushNamed(
               ROTAS.DETALHE_EVENTO,
               arguments: item,
             );
           },
+          
+          // IMAGEM
           leading: Container(
             width: 60,
             child: Image.network(
@@ -31,19 +33,27 @@ class ItemEventoGerenciado extends StatelessWidget {
               fit: BoxFit.fitWidth,
             ),
           ),
+         
+         // TITULO
           title: Text(
             "${item.titulo}",
             style: TextStyle(fontSize: 14),
           ),
+          
+          // SUBTITULO
           subtitle: Text(
             'Data do evento: ' +
                 DateFormat('dd/MM/yyyy').format(item.dataEvento),
             style: TextStyle(color: Colors.grey, fontSize: 11),
           ),
+          
+          // BOTÕES
           trailing: Container(
             width: 96,
             child: Row(
               children: [
+
+                // EDITAR
                 IconButton(
                   icon: Icon(
                     Icons.edit,
@@ -57,46 +67,31 @@ class ItemEventoGerenciado extends StatelessWidget {
                       );
                   },
                 ),
+                
+                // EXCLUIR
                 IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text(
-                          'Excluir item',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        content: Text(
-                            'Tem certeza que deseja excluir "${item.titulo}?"'),
+                      builder: (context) => 
+                      AlertDialog(
+                        title: Text('Excluir evento',style: TextStyle(fontWeight: FontWeight.bold)),
+                        content: Text('Tem certeza que deseja excluir "${item.titulo}?"'),
                         actions: [
-                          FlatButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            child: Text(
-                              'Excluir',
-                              style: TextStyle(color: Colors.red),
-                            ),
+                          TextButton(
+                            child: Text('Excluir', style: TextStyle(color: Colors.red)),
+                            onPressed: () {
+                              Provider.of<EventoProvider>(context, listen: false).removeFeed(item.id);
+                              Navigator.of(context).pop();
+                            },
                           ),
-                          FlatButton(
+                          TextButton(
                             child: Text('Não'),
-                            onPressed: () => Navigator.of(context).pop(false),
+                            onPressed: () => Navigator.of(context).pop(),
                           ),
                         ],
                       ),
-                    ).then(
-                      (value) async {
-                        if (value) {
-                          try {
-                            await itemRAW.deletar(item);
-                          } on HttpException catch (error) {
-                            scaffold.showSnackBar(
-                              SnackBar(
-                                content: Text(error.toString()),
-                              ),
-                            );
-                          }
-                        }
-                      },
                     );
                   },
                   color: Theme.of(context).errorColor,

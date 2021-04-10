@@ -6,6 +6,9 @@ class AuthException implements Exception {
     "EMAIL_NOT_FOUND": "Não há registro de usuário correspondente a este identificador. O usuário pode ter sido excluído.",
     "INVALID_PASSWORD": "A senha é inválida ou o usuário não possui uma senha.",
     "USER_DISABLED": "A conta do usuário foi desabilitada por um administrador.",
+
+    //a partir do FiresStone
+    'ERROR_OPERATION_NOT_ALLOWED' : 'contas de e-mail e senha não estão ativadas',
   };
 
   final String key;
@@ -20,3 +23,4 @@ class AuthException implements Exception {
     }
   }
 }
+

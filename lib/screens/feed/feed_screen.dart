@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scooter_rider_brasil/components/drawer.dart';
+import 'package:scooter_rider_brasil/models/feed_model.dart';
+import 'package:scooter_rider_brasil/providers/feed_provider.dart';
 //SCREENS
 import '../../components/feed/card_feed_widget.dart';
 import '../../components/menu_bottom_widget.dart';
-import '../../providers/feed_provider.dart';
 
 class FeedScreen extends StatefulWidget {
   @override
@@ -12,33 +13,15 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-
-  bool _isLoading = true;
-
-  Future<void> _refreshProducts(BuildContext context) {
-    return Provider.of<FeedProvider>(context, listen: false).loadFeed();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // Carregar os produtos
-    Provider.of<FeedProvider>(context, listen: false).loadFeed().then((_) {
-        setState(() {
-        _isLoading = false; //use o CircularProgressIndicator no body
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    FeedProvider cardRaw = Provider.of<FeedProvider>(context);
+    FeedProvider feedProvider = Provider.of<FeedProvider>(context);
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          actions: [Icon(Icons.menu, color: Colors.white)],
-          elevation: 1,
+          actions: [Icon(Icons.menu, color: Colors.black87)],
+          elevation: 10,
           flexibleSpace: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -52,16 +35,18 @@ class _FeedScreenState extends State<FeedScreen> {
                       Text(
                         'Scooter Rider',
                         style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 22,
                             fontFamily: 'Bookman',
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
                       ),
                       Text(
                         'B r a s i l'.toUpperCase(),
                         style: TextStyle(
                           fontSize: 8,
                           fontFamily: 'Bookman',
-                          color: Colors.yellow[800],
+                          color: Colors.grey,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -72,19 +57,35 @@ class _FeedScreenState extends State<FeedScreen> {
             ],
           ),
           // backgroundColor: Theme.of(context).primaryColor,
-          backgroundColor: Colors.white,
+         // backgroundColor: Colors.black87,
         ),
-       
-        body: _isLoading ? Center(child: RefreshProgressIndicator()) : RefreshIndicator(
-          onRefresh: () => _refreshProducts(context),
-          child: ListView.builder(
-            itemCount: cardRaw.itemCount(),
-            reverse: false,
-            itemBuilder: (context, index) {
-              return CardFeed(cardRaw.itemFeed[index]);
-            },
-          ),
-        ),
+
+        body: StreamBuilder(
+            stream: feedProvider.loadFeed(),
+            builder: (ctx, AsyncSnapshot<List<FeedMODEL>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+
+              List<FeedMODEL> feedRAW = snapshot.data;
+
+              return ListView.builder(
+                itemCount: feedRAW.length,
+                reverse: false,
+                itemBuilder: (context, i) {
+                  return Column(
+                    children: [
+                      Container(
+                        color: Colors.white,
+                        child: CardFeedWIDGET(feedRAW[i]),
+                      ),
+                      SizedBox(height: 15),
+                    ],
+                  );
+                },
+              );
+            }),
+        backgroundColor: Colors.grey[200],
         bottomNavigationBar: MenuBottom(),
         //drawer: MeuDrawer(),
         endDrawer: MeuDrawer(),

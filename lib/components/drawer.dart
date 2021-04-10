@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:scooter_rider_brasil/providers/auth.dart';
 import 'package:scooter_rider_brasil/utils/rotas.dart';
 
 class MeuDrawer extends StatelessWidget {
@@ -36,30 +36,51 @@ class MeuDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Auth auth = Provider.of(context);
     return Drawer( 
       child: Column(
         children: [
           UserAccountsDrawerHeader(
             currentAccountPicture: Image.asset('assets/logo_srb.png'),
-            accountName: Text(
-              'Fulano Barbosa da Silva de Sá',
-              style:
-                  TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold, color:  Colors.white, fontSize: 18),
+            accountName: FutureBuilder(
+              future: FirebaseAuth.instance.currentUser(),
+              builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+                
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  return CircularProgressIndicator();
+                }
+
+                final userId = snapshot.data.uid;
+                final a = Firestore.instance.collection('users').document(userId).snapshots();
+
+                return StreamBuilder(
+                  stream: a,
+                  builder: (ctx, AsyncSnapshot<DocumentSnapshot> chatSnapshot) {
+                    if (chatSnapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    return Text(chatSnapshot.data['nome'],style: TextStyle(fontWeight: FontWeight.bold),);
+                  },
+                );
+              },
             ),
-            accountEmail: Text(
-              '${auth.email}',
-              style: TextStyle(fontFamily: 'Raleway', color:  Colors.black45),
+
+            accountEmail: FutureBuilder(
+              future: FirebaseAuth.instance.currentUser(),
+              builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  return CircularProgressIndicator();
+                }
+                return Text(snapshot.data.email);
+              },
             ),
-            onDetailsPressed: () {
-              print('object');
-            },
+
             otherAccountsPictures: [
               IconButton(
-                icon: Icon(Icons.login),
+                icon: Icon(Icons.login,color: Colors.grey,),
                 onPressed: () {
-                  Provider.of<Auth>(context, listen: false).logout();
-                  Navigator.of(context).pushReplacementNamed(ROTAS.AUTH_HOME);
+                  FirebaseAuth.instance.signOut();
+                  // Provider.of<Auth>(context, listen: false).logout();
+                  //Navigator.of(context).pushReplacementNamed(ROTAS.AUTH_HOME);
                 } 
               ),
             ],
@@ -71,7 +92,9 @@ class MeuDrawer extends StatelessWidget {
                   icon: Icons.person,
                   titulo: 'Pefil',
                   subtitulo: 'Gerenciar perfil',
-                  onTap: () {},
+                  onTap: () {
+                    print(DateTime.now());
+                  },
                 ),
                 _createItem(
                   icon: Icons.miscellaneous_services,

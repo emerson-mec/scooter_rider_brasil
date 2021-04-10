@@ -1,20 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scooter_rider_brasil/providers/auth.dart';
+import 'package:scooter_rider_brasil/providers/auth_provider.dart';
 import 'package:scooter_rider_brasil/providers/evento_provider.dart';
-import 'package:scooter_rider_brasil/screens/auth-or-home_screen.dart';
+import 'package:scooter_rider_brasil/providers/feed_provider.dart';
+import 'package:scooter_rider_brasil/screens/authScreen.dart';
 import 'package:scooter_rider_brasil/screens/eventos/form_evento_screen.dart';
-import 'screens/eventos/eventos_screen.dart';
 import 'utils/rotas.dart';
-import 'providers/feed_provider.dart';
 
 //SCREENS
 import 'screens/compara_screen.dart';
 import 'screens/feed/favoritos_screen.dart';
 import 'screens/eventos/detalhe_evento_screen.dart';
-import 'screens/feed/detalhe_feed_screen.dart';
+import 'screens/feed/detalheFeed_screen.dart';
 import 'screens/feed/form_feed_screen.dart';
 import 'screens/gerenciar_screen.dart';
+import 'screens/eventos/eventos_screen.dart';
+import 'screens/feed/feed_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,24 +25,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => Auth()),
-        ChangeNotifierProxyProvider<Auth, FeedProvider>(
-          create: (_) => FeedProvider(),
-          update: (ctx, Auth auth, FeedProvider feedPreview) =>
-              FeedProvider(auth.token, auth.userId, feedPreview.itemFeed),
-        ),
-        ChangeNotifierProxyProvider<Auth, EventoProvider>(
-          create: (_) => EventoProvider(),
-          update: (ctx, auth, EventoProvider eventoPreview) =>
-              EventoProvider(auth.token, eventoPreview.itemEvento),
-        ),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => EventoProvider()),
+        ChangeNotifierProvider(create: (_) => FeedProvider()),
       ],
       child: MaterialApp(
-        title: 'Scooter Ride Brasil',
+        title: 'Scooter Rider Brasil',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Color(0xFFffb300),
-          accentColor: Colors.deepPurple,
+          primaryColor: Color(0xFF161616),
+          accentColor: Colors.yellow[800],
+          errorColor: Colors.red,
+          //scaffoldBackgroundColor: Colors.grey[200],
           buttonTheme: ButtonTheme.of(context).copyWith(
             buttonColor: Colors.black,
             textTheme: ButtonTextTheme.primary,
@@ -72,10 +68,20 @@ class MyApp extends StatelessWidget {
                 ),
               ),
         ),
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.onAuthStateChanged,
+          builder: (ctx, userSnapshot) {
+            if (userSnapshot.hasData) {
+              return FeedScreen();
+            } else {
+              return AuthScreen();
+            }
+          },
+        ),
         routes: {
-          ROTAS.AUTH_HOME: (context) => AuthOrHomeScreen(),
+          //   ROTAS.AUTH_HOME: (context) => AuthOrHomeScreen(),
           ROTAS.COMPARA: (context) => ComparaScooter(),
-          ROTAS.DETALHE_FEED: (context) => DetalheFeed(),
+          ROTAS.DETALHE_FEED: (context) => DetalheFeedSCREEN(),
           ROTAS.DETALHE_EVENTO: (context) => DetalheEvento(),
           ROTAS.FAVORITOS: (context) => Favoritos(),
           ROTAS.GERENCIAR: (context) => GerenciarScreen(),

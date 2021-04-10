@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -19,7 +21,7 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
   final _imageUrlController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   //salva aqui o valor de cada "onSaved" de cada formulário.
-  final Map<String, Object> _formData = {};
+  final Map<String, dynamic> _formData = {};
   bool _isLoading = true;
   DateTime selectedDate = DateTime.now();
 
@@ -34,26 +36,24 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    //trás a data do evento que já estava criado. Corrige problema de pegar data atual.
-    final event = ModalRoute.of(context).settings.arguments as EventoMODEL;
-    if (event != null) {
-      this.selectedDate = event.dataEvento;
+    final eventModal = ModalRoute.of(context).settings.arguments as EventoMODEL;
+    
+    if (eventModal != null) {
+      this.selectedDate = eventModal.dataEvento;
+      //_formData['dataEvento'] = eventModal.dataEvento;
     }
 
     if (_formData.isEmpty) {
-      final itemEvent =
-          ModalRoute.of(context).settings.arguments as EventoMODEL;
-      if (itemEvent != null) {
-        _formData['id'] = itemEvent.id;
-        _formData['titulo'] = itemEvent.titulo;
-        _formData['subtitulo'] = itemEvent.subtitulo;
-        _formData['imagemPrincipal'] = itemEvent.imagemPrincipal;
-        _formData['conteudo'] = itemEvent.conteudo;
+      if (eventModal != null) {
+        _formData['id'] = eventModal.id;
+        _formData['titulo'] = eventModal.titulo;
+        _formData['subtitulo'] = eventModal.subtitulo;
+        _formData['imagemPrincipal'] = eventModal.imagemPrincipal;
+        _formData['conteudo'] = eventModal.conteudo;
         _imageUrlController.text = _formData['imagemPrincipal'];
-        _formData['dataEvento'] = itemEvent.dataEvento;
-      } else {
-        // _formData['price'] = '';
-      }
+        _formData['dataEvento'] = eventModal.dataEvento;
+        _formData['dataPublicacao'] = eventModal.dataPublicacao;
+      } 
     }
   }
 
@@ -82,10 +82,12 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
     _subtituloFocusNode.dispose();
     _conteudoFocusNode.dispose();
     _imagemPrincialFocusNode.removeListener(_updateImageUrl);
+    _imageUrlController.dispose();
   }
-
+  
+  //CHAMADO QUANDO CLICA EM NO BOTÃO "SALVAR"
   Future _saveForm() async {
-    //
+    //se todos os campos do form forem válidos, retorne true.
     bool isValid = _formKey.currentState.validate();
     //se formulário não for valido sai e não continue os passos abaixo.
     if (!isValid) {
@@ -95,23 +97,23 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
     //O "onSaved" adiciona os dados ao Map "_formData" quando este método for chamado.
     _formKey.currentState.save();
 
-    //Objeto final criado nesta página de formulário
     final newEvento = EventoMODEL(
-      id: _formData['id'],
+      id: _formData['id'], //o id será passado quando o "addEvento()" for chamado.
       titulo: _formData['titulo'],
       subtitulo: _formData['subtitulo'],
       imagemPrincipal: _formData['imagemPrincipal'],
       conteudo: _formData['conteudo'],
       dataEvento: selectedDate,
+      dataPublicacao: DateTime.now(), 
     );
 
     final itemEvento = Provider.of<EventoProvider>(context, listen: false);
 
     try {
       if (_formData['id'] == null) {
-        await itemEvento.addEvento(newEvento);
+        await itemEvento.addEvento(newEvento).then((value) => print('adicionou'));
       } else {
-        await itemEvento.updateItemEvento(newEvento);
+       await itemEvento.updateEvento(newEvento);
       }
       Navigator.of(context).pop();
     } catch (error) {
@@ -121,7 +123,7 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
           title: Text('Ocorreu um erro!'),
           content: Text('Erro inesperado'),
           actions: [
-            FlatButton(
+            TextButton(
               child: Text('Fechar'),
               onPressed: () => Navigator.of(context).pop(),
             )
@@ -164,7 +166,7 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
   //     });
   // }
 
-//DATA
+  //DATA
   buildCupertinoDatePicker(BuildContext context) {
      
     showModalBottomSheet(
@@ -176,7 +178,7 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
             child: CupertinoDatePicker(
               
               mode: CupertinoDatePickerMode.dateAndTime,
-              onDateTimeChanged: (picked) {
+              onDateTimeChanged: (DateTime picked) {
 
                 if (picked != null && picked != selectedDate) {
                   setState(() {
@@ -214,6 +216,13 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
           key: _formKey,
           child: ListView(
             children: [
+
+              Text('ID: ${_formData['id']}'),
+              Text('DATA PUBLICACÃO: ${_formData['dataPublicacao']}'),
+
+              
+
+              // TITULO
               TextFormField(
                 maxLines: 1, maxLength: 100,
                 initialValue: _formData['titulo'],
@@ -236,6 +245,8 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
                   return null;
                 },
               ),
+              
+              // SUBTITULO
               TextFormField(
                 initialValue: _formData['subtitulo'],
                 decoration: InputDecoration(labelText: 'Subtitulo'),
@@ -252,6 +263,8 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
                   FocusScope.of(context).requestFocus(_imagemPrincialFocusNode);
                 },
               ),
+              
+              // IMAGEM URL
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -297,6 +310,8 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
                   ),
                 ],
               ),
+              
+              // CONTEUDO
               TextFormField(
                 //tela inicializa com os valores já preenchidos no Field.
                 //usado para atualizar um produto, aqui chama o método didChangeDependencies().
@@ -312,6 +327,7 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
                 //recebe o texto que foi colocado neste field, como se fosse o controller e salve no Map "_formData".
                 onSaved: (value) => _formData['conteudo'] = value,
               ),
+              
               SizedBox(height: 10),
 
               //DATA MATERIAL
@@ -342,7 +358,7 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text('Data do evento: ', style: TextStyle(fontSize: 15)),
-                  FlatButton(
+                  TextButton(
                     //DATA CUPERTINO
                     onPressed: () => buildCupertinoDatePicker(context), 
                     child: Text(
@@ -352,27 +368,20 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    color: Colors.grey[100],
                   ),
                 ],
               ),
 
+              // BOTÕES
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(
-                    width: 200,
-                    child: FlatButton.icon(
-                      colorBrightness: Brightness.dark,
-                      color: Colors.green,
-                      icon: Icon(Icons.save),
-                      label: Text('Salvar'),
-                      onPressed: () => _saveForm(),
-                    ),
+                  TextButton.icon(
+                    icon: Icon(Icons.save),
+                    label: Text('Salvar'),
+                    onPressed: () => _saveForm(),
                   ),
-                  FlatButton.icon(
-                    colorBrightness: Brightness.dark,
-                    color: Colors.red,
+                  TextButton.icon(
                     icon: Icon(Icons.cancel),
                     label: Text('Cancelar'),
                     onPressed: () => Navigator.of(context).pop(),

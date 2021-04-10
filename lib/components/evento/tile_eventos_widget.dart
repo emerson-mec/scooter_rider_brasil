@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:scooter_rider_brasil/models/evento_model.dart';
+import 'package:scooter_rider_brasil/utils/constantes.dart';
+import 'package:scooter_rider_brasil/utils/rotas.dart';
 
-//SCREENS
-import '../../utils/rotas.dart';
 
 class TileEventoWidget extends StatefulWidget {
   final EventoMODEL item;
@@ -25,10 +24,10 @@ class _TileEventoWidgetState extends State<TileEventoWidget> {
         children: [
           InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed(
-                ROTAS.DETALHE_EVENTO,
-                arguments: widget.item,
-              );
+               Navigator.of(context).pushNamed(
+                 ROTAS.DETALHE_EVENTO,
+                  arguments: widget.item,
+               );
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,7 +50,7 @@ class _TileEventoWidgetState extends State<TileEventoWidget> {
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: Image.network(
-                          widget.item.imagemPrincipal,
+                          widget.item.imagemPrincipal ?? Constantes.SEM_IMAGEM,
                           fit: BoxFit.contain,
                           loadingBuilder: (BuildContext context, Widget child,
                               ImageChunkEvent loadingProgress) {
@@ -89,14 +88,14 @@ class _TileEventoWidgetState extends State<TileEventoWidget> {
 
                       padding: EdgeInsets.all(4),
                       //color: Theme.of(context).primaryColor,
-                      child: Text(
-                        DateFormat('dd/MM').format(widget.item.dataEvento),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 11,
-                          color: Colors.white,
-                        ),
-                      ),
+                      // child: Text(
+                      //   DateFormat('dd/MM').format(widget.item.dataEvento),
+                      //   style: TextStyle(
+                      //     fontWeight: FontWeight.w400,
+                      //     fontSize: 11,
+                      //     color: Colors.white,
+                      //   ),
+                      // ),
                     ),
                   ],
                 ),

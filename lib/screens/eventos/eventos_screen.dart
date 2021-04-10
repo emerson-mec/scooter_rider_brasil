@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scooter_rider_brasil/components/drawer.dart';
 import 'package:scooter_rider_brasil/components/evento/tile_eventos_widget.dart';
+import 'package:scooter_rider_brasil/models/evento_model.dart';
 import 'package:scooter_rider_brasil/providers/evento_provider.dart';
 //SCREENS
 
@@ -11,62 +11,61 @@ class EventoScreen extends StatefulWidget {
 }
 
 class _EventoScreenState extends State<EventoScreen> {
-  Future<void> _refreshProducts(BuildContext context) {
-    return Provider.of<EventoProvider>(context, listen: false).loadEvento();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // Carregar os produtos
-    Provider.of<EventoProvider>(context, listen: false).loadEvento();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final itemRaw = Provider.of<EventoProvider>(context);
+    EventoProvider eventoProvider = Provider.of<EventoProvider>(context);
 
     return Scaffold(
-     appBar: AppBar(
+      appBar: AppBar(
         //actions: [Icon(Icons.menu, color: Theme.of(context).primaryColor)],
-        elevation: 1,
+        elevation: 10,
         flexibleSpace: Center(
           child: Column(
             children: [
-                  SizedBox(height: 34),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset('assets/logo_srb.png', scale: 20),
-                  SizedBox(width: 7),
-                  Text(
-                    'Eventos',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: 'Bookman',
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
+              SafeArea(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 55),
+                    Image.asset('assets/logo_srb.png', scale: 18),
+                    SizedBox(width: 7),
+                    Text(
+                      'Eventos',
+                      style: TextStyle(
+                        color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'Bookman',
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshProducts(context),
-        child: ListView.builder(
-          itemCount: itemRaw.itemCount(),
-          reverse: false,
-          itemBuilder: (context, index) {
-            return TileEventoWidget(itemRaw.itemEvento[index]);
-          },
-        ),
-      ),
-     // bottomNavigationBar: MenuBottom(),
+      body: StreamBuilder(
+          stream: eventoProvider.loadEvento(),
+          builder: (ctx, AsyncSnapshot<List<EventoMODEL>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
 
-     // drawer: MeuDrawer(),
+            List<EventoMODEL> evento = snapshot.data;
 
-     endDrawer: MeuDrawer(),
+            return ListView.builder(
+              itemCount: evento.length,
+              reverse: false,
+              itemBuilder: (context, i) {
+                return TileEventoWidget(evento[i]);
+              },
+            );
+          }),
+       //bottomNavigationBar: MenuBottom(),
+
+       //drawer: MeuDrawer(),
+
+      //endDrawer: MeuDrawer(),
     );
   }
 }
