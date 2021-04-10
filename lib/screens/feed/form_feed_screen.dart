@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scooter_rider_brasil/models/feed_model.dart';
@@ -9,19 +11,24 @@ class FormularioFeedScreen extends StatefulWidget {
 }
 
 class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
+  
+  final _formKey = GlobalKey<FormState>();
+  final _imageUrlController = TextEditingController();
+  //salva aqui o valor de cada "onSaved" de cada formulário.
+  final Map<String, Object> _formData = {};
+  
   //FocusNode == "nó de foco". Algum formulário aponta o cursor para este nó.
   final _subtituloFocusNode = FocusNode();
   final _conteudoFocusNode = FocusNode();
   final _imagemPrincialFocusNode = FocusNode();
 
-  final _imageUrlController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-  //salva aqui o valor de cada "onSaved" de cada formulário.
-  final Map<String, Object> _formData = {};
   bool _isLoading = true;
 
+  /////////////////////////////////////////////
+
+
   int _radioValue = -1;
-  void _radioValueChange(int value) {
+  void _radioTipoFeed(int value) {
     setState(() {
       _radioValue = value;
     });
@@ -30,45 +37,47 @@ class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
       case 0:
         _formData['tipoFeed'] = TipoFeed.noticia;
         break;
-      case 2:
+      case 1:
         _formData['tipoFeed'] = TipoFeed.patrocinado;
+        break;
+      case 2:
+        _formData['tipoFeed'] = TipoFeed.dica;
         break;
       case 3:
         _formData['tipoFeed'] = TipoFeed.review;
-        break;
-      case 4:
-        _formData['tipoFeed'] = TipoFeed.dica;
         break;
     }
   }
 
   int _radioValue2 = -1;
-  void _radioValueChange2(int value) {
+  void _radioEstado(int value) {
     setState(() {
       _radioValue2 = value;
     });
 
     switch (_radioValue2) {
       case 0:
-        _formData['estado'] = 'todos';
+        _formData['estado'] = EstadosFeed.TODOS;
         break;
       case 1:
-        _formData['estado'] = 'RJ';
+        _formData['estado'] = EstadosFeed.RJ;
         break;
       case 2:
-        _formData['estado'] = 'SP';
+        _formData['estado'] = EstadosFeed.SP;
         break;
       case 3:
-        _formData['estado'] = 'MG';
+        _formData['estado'] = EstadosFeed.MG;
+        break;
+      case 4:
+        _formData['estado'] = EstadosFeed.SC;
         break;
       default:
-        _formData['estado'] = 'todos';
+        _formData['estado'] = EstadosFeed.TODOS;
         break;
     }
   }
 
   
-
   @override
   void initState() {
     super.initState();
@@ -76,54 +85,76 @@ class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
     _imagemPrincialFocusNode.addListener(_updateImageUrl);
   }
 
+  //QUANDO FOR EDITAR
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    final itemFeedModal = ModalRoute.of(context).settings.arguments as FeedMODEL;
+
     if (_formData.isEmpty) {
-      final itemFeed = ModalRoute.of(context).settings.arguments as FeedMODEL;
-      if (itemFeed != null) {
-        _formData['idFeed'] = itemFeed.idFeed;
-        _formData['titulo'] = itemFeed.titulo;
-        _formData['subtitulo'] = itemFeed.subtitulo;
-        _formData['imagemPrincipal'] = itemFeed.imagemPrincipal;
-        _formData['conteudo'] = itemFeed.conteudo;
-        _formData['tipoFeed'] = itemFeed.tipoFeed;
-        _formData['estado'] = itemFeed.estado;
-        //_formData['dataPublicacao'] = itemFeed.dataPublicacao;
+      if (itemFeedModal != null) {
+        _formData['idFeed'] = itemFeedModal.idFeed;
+        _formData['titulo'] = itemFeedModal.titulo;
+        _formData['subtitulo'] = itemFeedModal.subtitulo;
+        _formData['imagemPrincipal'] = itemFeedModal.imagemPrincipal;
+        _formData['conteudo'] = itemFeedModal.conteudo;
+        _formData['tipoFeed'] = itemFeedModal.tipoFeed;
+        _formData['dataPublicacao'] = itemFeedModal.dataPublicacao;
+        _formData['estado'] = itemFeedModal.estado;
 
-        _radioValueChange(itemFeed.tipoFeed.index);
-
-        int radioEstado(FeedMODEL itemFeed){
-          switch (itemFeed.estado) {
-            case "todos":
+        
+        //POSICIONAR O RADIO QUANDO FOR EDITAR 
+        int radioFeed(FeedMODEL itemFeedModal){
+          switch (itemFeedModal.tipoFeedAsText) {
+            case "Notícia":
               return 0;
-            case "RJ":
+            case "Patrocínado":
               return 1;
-            case "SP":
+            case "Dica":
               return 2;
-            case "MG":
+            case "Review":
               return 3;
             default: 
                return 0;
           }
         }
-       _radioValueChange2(radioEstado(itemFeed));
-
+        _radioTipoFeed(radioFeed(itemFeedModal));
+        
+        
+        //POSICIONAR O RADIO QUANDO FOR EDITAR 
+        int radioEstado(FeedMODEL itemFeedModal){
+          switch (itemFeedModal.estadoFeedAsText) {
+            case "Todos":
+              return 0;
+            case "Rio de Janeiro":
+              return 1;
+            case "São Paulo":
+              return 2;
+            case "Minas Gerais":
+              return 3;
+            case "Santa Catarina":
+              return 4;
+            default: 
+               return 0;
+          }
+        }
+       _radioEstado(radioEstado(itemFeedModal));
+       
+        //COLOCA A URL QUANDO FOR EDITAR
         _imageUrlController.text = _formData['imagemPrincipal'];
-      } else {
-        // _formData['price'] = '';
-      }
+      } 
     }
   }
 
+  //ATUALIZA INTERFACE GRÁFICA de acordo com o que está no "_imageUrlController.text".
   void _updateImageUrl() {
-    //atualize a interface gráfica de acordo com o que está no "_imageUrlController".
     if (isValidImageUrl(_imageUrlController.text)) {
       setState(() {});
     }
   }
 
+  //VALIDA URL
   bool isValidImageUrl(String url) {
     bool startWithHttp = url.toLowerCase().startsWith('http://');
     bool startWithHttps = url.toLowerCase().startsWith('https://');
@@ -138,50 +169,48 @@ class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
   @override
   //liberar espaço de memória de objetos que foram removidos.
   void dispose() {
-    super.dispose();
     _subtituloFocusNode.dispose();
     _conteudoFocusNode.dispose();
     _imagemPrincialFocusNode.removeListener(_updateImageUrl);
+    _imageUrlController.dispose();
+    super.dispose();
   }
 
+  //CHAMADO QUANDO CLICA EM NO BOTÃO "SALVAR"
   Future _saveForm() async {
-    //
+    //se todos os campos do form forem válidos, retorne true.
     bool isValid = _formKey.currentState.validate();
-    //se formulário não for valido sai e não continue os passos abaixo.
-    if (!isValid) {
+    
+    //não deixa salvar se formulário não for valido.
+    if (!isValid || _radioValue == -1 || _radioValue2 == -1) {
       return;
     }
-    if (_radioValue == -1) {
-      return;
-    }
-    //chama o "onSaved" de cada um dos formulários.
-    //O "onSaved" adiciona os dados ao Map "_formData" quando este método for chamado.
     _formKey.currentState.save();
 
-    //Objeto final criado nesta página de formulário
     final newFeed = FeedMODEL(
-      idFeed: _formData['idFeed'],
+      idFeed: _formData['idFeed'], //o id será passado quando o "addFeed()" for chamado.
       titulo: _formData['titulo'],
       subtitulo: _formData['subtitulo'],
       imagemPrincipal: _formData['imagemPrincipal'],
       conteudo: _formData['conteudo'],
       tipoFeed: _formData['tipoFeed'],
-      dataPublicacao: DateTime.now(),
-      curtidas: 0,
+      dataPublicacao: DateTime.now(),  
       estado: _formData['estado'],
-      //favorito: false,
     );
+
+    
+
     setState(() {
       _isLoading = true;
     });
 
-    final itemFeed = Provider.of<FeedProvider>(context, listen: false);
+    final feedProvider = Provider.of<FeedProvider>(context, listen: false);
 
     try {
       if (_formData['idFeed'] == null) {
-        await itemFeed.addFeed(newFeed);
+        await feedProvider.addFeed(newFeed);
       } else {
-        await itemFeed.updateItemFeed(newFeed);
+        await feedProvider.updateFeed(newFeed);
       }
       Navigator.of(context).pop();
     } catch (error) {
@@ -191,7 +220,7 @@ class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
           title: Text('Ocorreu um erro!'),
           content: Text('Erro inesperado'),
           actions: [
-            FlatButton(
+            TextButton(
               child: Text('Fechar'),
               onPressed: () => Navigator.of(context).pop(),
             )
@@ -218,6 +247,7 @@ class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
             icon: _isLoading ? Icon(Icons.save) : LinearProgressIndicator(),
             onPressed: () => _saveForm(),
           ),
+         
         ],
       ),
       body: Padding(
@@ -226,6 +256,11 @@ class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
           key: _formKey,
           child: ListView(
             children: [
+
+              Text('ID: ${_formData['idFeed']}'),
+              Text('DATA: ${_formData['dataPublicacao']}'),
+
+              // TIPO DE FEED
               Container(
                 color: Colors.grey[200],
                 child: SingleChildScrollView(
@@ -249,33 +284,35 @@ class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
                           Radio(
                             value: 0,
                             groupValue: _radioValue,
-                            onChanged: _radioValueChange,
+                            onChanged: _radioTipoFeed,
                           ),
                           Text('notícia'),
                           Radio(
-                            value: 3,
+                            value: 1,
                             groupValue: _radioValue,
-                            onChanged: _radioValueChange,
+                            onChanged: _radioTipoFeed,
                           ),
-                          Text('review'),
-                          Radio(
-                            value: 4,
-                            groupValue: _radioValue,
-                            onChanged: _radioValueChange,
-                          ),
-                          Text('dica'),
+                          Text('patrocinado'),
                           Radio(
                             value: 2,
                             groupValue: _radioValue,
-                            onChanged: _radioValueChange,
+                            onChanged: _radioTipoFeed,
                           ),
-                          Text('patrocinado'),
+                          Text('dica'),
+                          Radio(
+                            value: 3,
+                            groupValue: _radioValue,
+                            onChanged: _radioTipoFeed,
+                          ),
+                          Text('review'),
                         ],
                       ),
                     ],
                   ),
                 ),
               ),
+              
+              // ESTADO
               Container(
                 color: Colors.grey[200],
                 child: SingleChildScrollView(
@@ -299,37 +336,41 @@ class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
                           Radio(
                             value: 0,
                             groupValue: _radioValue2,
-                            onChanged: _radioValueChange2,
+                            onChanged: _radioEstado,
                           ),
                           Text('Todos'),
                           Radio(
                             value: 1,
                             groupValue: _radioValue2,
-                            onChanged: _radioValueChange2,
+                            onChanged: _radioEstado,
                           ),
                           Text('RJ'),
                           Radio(
                             value: 2,
                             groupValue: _radioValue2,
-                            onChanged: _radioValueChange2,
+                            onChanged: _radioEstado,
                           ),
                           Text('SP'),
                           Radio(
                             value: 3,
                             groupValue: _radioValue2,
-                            onChanged: _radioValueChange2,
+                            onChanged: _radioEstado,
                           ),
                           Text('MG'),
-                          
-                       
-
-    
+                          Radio(
+                            value: 4,
+                            groupValue: _radioValue2,
+                            onChanged: _radioEstado,
+                          ),
+                          Text('SC'),
                         ],
                       ),
                     ],
                   ),
                 ),
               ),
+              
+              // TITULO
               TextFormField(
                 maxLines: 1, maxLength: 100,
                 initialValue: _formData['titulo'],
@@ -352,6 +393,8 @@ class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
                   return null;
                 },
               ),
+             
+              // SUBTITULO
               TextFormField(
                 initialValue: _formData['subtitulo'],
                 decoration: InputDecoration(labelText: 'Subtitulo'),
@@ -368,6 +411,8 @@ class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
                   FocusScope.of(context).requestFocus(_imagemPrincialFocusNode);
                 },
               ),
+              
+              // URL DA IMAGEM
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -422,6 +467,8 @@ class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
                   ),
                 ],
               ),
+             
+              // CONTEUDO
               TextFormField(
                 //tela inicializa com os valores já preenchidos no Field.
                 //usado para atualizar um produto, aqui chama o método didChangeDependencies().
@@ -437,30 +484,24 @@ class _FormularioFeedScreenState extends State<FormularioFeedScreen> {
                 //recebe o texto que foi colocado neste field, como se fosse o controller e salve no Map "_formData".
                 onSaved: (value) => _formData['conteudo'] = value,
               ),
-              SizedBox(height: 10),
+               
+              // BOTÕES
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(
-                    width: 200,
-                    child: FlatButton.icon(
-                      colorBrightness: Brightness.dark,
-                      color: Colors.green,
-                      icon:
-                          _isLoading ? Icon(Icons.save) : Icon(Icons.save_alt),
-                      label: Text('Salvar'),
-                      onPressed: () => _saveForm(),
-                    ),
+                  TextButton.icon(
+                    icon: _isLoading ? Icon(Icons.save) : Icon(Icons.save_alt),
+                    label: Text('Salvar'),
+                    onPressed: () => _saveForm(),
                   ),
-                  FlatButton.icon(
-                    colorBrightness: Brightness.dark,
-                    color: Colors.red,
+                  TextButton.icon(
                     icon: Icon(Icons.cancel),
                     label: Text('Cancelar'),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ],
               ),
+              
               SizedBox(height: 15),
             ],
           ),

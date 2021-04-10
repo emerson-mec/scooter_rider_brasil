@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:scooter_rider_brasil/models/feed_model.dart';
-import 'package:scooter_rider_brasil/providers/auth.dart';
 import 'package:scooter_rider_brasil/providers/feed_provider.dart';
 import 'package:scooter_rider_brasil/utils/rotas.dart';
 
@@ -16,13 +14,12 @@ class ItemFavoritos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Auth auth = Provider.of(context);
     return Card(
       child: Dismissible(
         direction: DismissDirection.endToStart,
         key: Key(item.titulo),
         onDismissed: (direction) {
-          itemRaw.favoritar(item,auth.userId);
+         // itemRaw.favoritar(item);
           Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text("Item removido dos favoritos"),
@@ -30,7 +27,7 @@ class ItemFavoritos extends StatelessWidget {
                 label: 'DESFAZER',
                 textColor: Colors.yellow,
                 onPressed: () {
-                  itemRaw.favoritar(item, auth.userId);
+                  //itemRaw.favoritar(item);
                 },
               ),
             ),

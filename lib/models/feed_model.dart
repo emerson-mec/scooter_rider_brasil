@@ -9,25 +9,74 @@ class FeedMODEL with ChangeNotifier {
   final String conteudo;
   final TipoFeed tipoFeed;
   final DateTime dataPublicacao;
-  int curtidas;
-  bool favorito;
-  bool like;
-  final String estado;
+  final EstadosFeed estado;
+  //int curtidas;
+  //bool favorito;
+  //bool like;
+  
 
   FeedMODEL({
-    this.idFeed,
-    @required this.titulo,
+    @required this.idFeed,
+    this.titulo,
     this.subtitulo,
     this.conteudo,
     this.tipoFeed,
     this.imagemPrincipal,
     this.dataPublicacao,
-    this.curtidas = 0,
-    this.favorito = false,
-    this.estado,
-    this.like = false,
+    this.estado = EstadosFeed.TODOS,
+    //this.curtidas = 0,
+    //this.favorito = false,
+    //this.like = false,
   });
 
+  
+
+  Map<String, dynamic> paraMap() {
+    return {
+      'idFeed': idFeed,
+      'titulo': titulo,
+      'subtitulo': subtitulo,
+      'imagemPrincipal': imagemPrincipal,
+      'conteudo': conteudo,
+      'tipoFeed': tipoFeed.toString(),
+      'dataPublicacao': dataPublicacao.toIso8601String(),
+      'estado': estado.toString(),
+      //'curtidas': curtidas,
+      //'favorito': favorito,
+      //'like': like,
+    };
+  }
+
+  factory FeedMODEL.daAPI(Map<String, dynamic> feed) {
+    return FeedMODEL(
+      idFeed: feed['idFeed'],
+      titulo: feed['titulo'],
+      subtitulo: feed['subtitulo'] ,
+      imagemPrincipal: feed['imagemPrincipal'] ,
+      conteudo: feed['conteudo'] ,
+      tipoFeed: feed['tipoFeed'] == 'TipoFeed.review' ? TipoFeed.review : 
+                        feed['tipoFeed'] == 'TipoFeed.dica' ? TipoFeed.dica : 
+                        feed['tipoFeed'] == 'TipoFeed.patrocinado' ? TipoFeed.patrocinado : 
+                        feed['tipoFeed'] == 'TipoFeed.evento' ? TipoFeed.evento : 
+                        feed['tipoFeed'] == 'TipoFeed.noticia' ? TipoFeed.noticia : 
+                        feed['tipoFeed'] == 'TipoFeed.evento' ? TipoFeed.evento
+                        : null ,
+      dataPublicacao: DateTime.parse(feed['dataPublicacao']),
+      estado: feed['estado'] == 'EstadosFeed.RJ' ? EstadosFeed.RJ : 
+                        feed['estado'] == 'EstadosFeed.SP' ? EstadosFeed.SP : 
+                        feed['estado'] == 'EstadosFeed.MG' ? EstadosFeed.MG : 
+                        feed['estado'] == 'EstadosFeed.SC' ? EstadosFeed.SC : 
+                        feed['estado'] == 'EstadosFeed.TODOS' ? EstadosFeed.TODOS : 
+                        null ,
+      //curtidas: feed['curtidas'] ,
+      //favorito: feed['favorito'] ,
+      //like: feed['like'] ,
+    );
+  }
+
+  //String toJson() => json.encode(paraMap());
+  //factory FeedMODEL.fromJson(String source) => FeedMODEL.daAPI(json.decode(source));
+  
   dataPublicacaoAsFormat(dataPublicacao) {
     return Text(
       DateFormat('dd/MM/yyyy - hh:mm').format(dataPublicacao),
@@ -38,18 +87,38 @@ class FeedMODEL with ChangeNotifier {
     switch (tipoFeed) {
       case TipoFeed.noticia:
         return 'Notícia';
-      case TipoFeed.evento:
-        return 'Evento';
       case TipoFeed.patrocinado:
         return 'Patrocínado';
-      case TipoFeed.review:
-        return 'Review';
       case TipoFeed.dica:
         return 'Dica';
+      case TipoFeed.review:
+        return 'Review';
+      case TipoFeed.evento:
+        return 'Evento';
       default:
         return 'Desconhecido';
     }
   }
+
+  String get estadoFeedAsText {
+    switch (estado) {
+      case EstadosFeed.TODOS:
+        return 'Todos';
+      case EstadosFeed.RJ:
+        return 'Rio de Janeiro';
+      case EstadosFeed.SP:
+        return 'São Paulo';
+      case EstadosFeed.MG:
+        return 'Minas Gerais';
+      case EstadosFeed.SC:
+        return 'Santa Catarina';
+      default:
+        return 'Desconhecido';
+    }
+  }
+  
 }
 
 enum TipoFeed { noticia, evento, patrocinado, review, dica }
+
+enum EstadosFeed { TODOS, MG, RJ, SC, SP }

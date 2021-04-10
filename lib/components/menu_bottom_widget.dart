@@ -18,13 +18,13 @@ class MenuBottom extends StatelessWidget {
               onPressed: () => Navigator.of(context).popAndPushNamed('/'),
             ),
           ),
-          Expanded(
-            child: IconButton(
-              icon: Icon(Icons.compare_arrows_outlined,
-                  color: Colors.blueGrey[800]),
-              onPressed: () => Navigator.of(context).pushNamed('/compara'),
-            ),
-          ),
+          // Expanded(
+          //   child: IconButton(
+          //     icon: Icon(Icons.compare_arrows_outlined,
+          //         color: Colors.blueGrey[800]),
+          //     onPressed: () => Navigator.of(context).pushNamed('/compara'),
+          //   ),
+          // ),
           Expanded(
             child: IconButton(
               icon: Icon(
@@ -34,13 +34,13 @@ class MenuBottom extends StatelessWidget {
               onPressed: () => Navigator.of(context).pushNamed(ROTAS.EVENTOS),
             ),
           ),
-          Expanded(
-            child: IconButton(
-              //icon: Icon(FontAwesomeIcons.bookmark, color: Colors.white),
-              icon: Icon(Icons.star_border, color: Colors.blueGrey[800]),
-              onPressed: () => Navigator.of(context).pushNamed(ROTAS.FAVORITOS),
-            ),
-          ),
+          // Expanded(
+          //   child: IconButton(
+          //     //icon: Icon(FontAwesomeIcons.bookmark, color: Colors.white),
+          //     icon: Icon(Icons.star_border, color: Colors.blueGrey[800]),
+          //     onPressed: () => Navigator.of(context).pushNamed(ROTAS.FAVORITOS),
+          //   ),
+          // ),
           Expanded(
             child: IconButton(
               icon:
