@@ -9,9 +9,16 @@ class FeedProvider with ChangeNotifier {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
 
-  Stream<List<FeedMODEL>> loadFeed() {
-    return _db.collection('feed').snapshots().map((snapshot) =>
-        snapshot.documents.map((doc) => FeedMODEL.daAPI(doc.data)).toList());
+  Stream<List<FeedMODEL>> loadFeed([String estado = 'EstadosFeed.RJ']) {
+    return _db
+    .collection('feed')
+    .where("estado", whereIn: ['$estado', 'EstadosFeed.TODOS'])
+    .snapshots()
+    .map((snapshot) =>
+        snapshot.documents.reversed 
+        .map((doc) => FeedMODEL.daAPI(doc.data))
+        .toList()
+    );
   }
 
   Future<void> addFeed(FeedMODEL newFeed) async {

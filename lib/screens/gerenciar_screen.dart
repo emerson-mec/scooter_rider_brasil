@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scooter_rider_brasil/components/evento/tile_eventos_widget.dart';
 import 'package:scooter_rider_brasil/components/evento/tile_gerenciado.dart';
 import 'package:scooter_rider_brasil/components/feed/tile_feed_gerenciado_tile.dart';
 import 'package:scooter_rider_brasil/models/evento_model.dart';

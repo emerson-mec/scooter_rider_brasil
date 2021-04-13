@@ -75,6 +75,7 @@ flutter:
    - assets/image/fimFeed.png
    - assets/logo_srb.png
    - assets/logo_srb2.png
+   - assets/logo_srb3.png
    - assets/image/background.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see

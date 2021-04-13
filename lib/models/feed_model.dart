@@ -55,19 +55,19 @@ class FeedMODEL with ChangeNotifier {
       imagemPrincipal: feed['imagemPrincipal'] ,
       conteudo: feed['conteudo'] ,
       tipoFeed: feed['tipoFeed'] == 'TipoFeed.review' ? TipoFeed.review : 
-                        feed['tipoFeed'] == 'TipoFeed.dica' ? TipoFeed.dica : 
-                        feed['tipoFeed'] == 'TipoFeed.patrocinado' ? TipoFeed.patrocinado : 
-                        feed['tipoFeed'] == 'TipoFeed.evento' ? TipoFeed.evento : 
-                        feed['tipoFeed'] == 'TipoFeed.noticia' ? TipoFeed.noticia : 
-                        feed['tipoFeed'] == 'TipoFeed.evento' ? TipoFeed.evento
-                        : null ,
+                feed['tipoFeed'] == 'TipoFeed.dica' ? TipoFeed.dica : 
+                feed['tipoFeed'] == 'TipoFeed.patrocinado' ? TipoFeed.patrocinado : 
+                feed['tipoFeed'] == 'TipoFeed.evento' ? TipoFeed.evento : 
+                feed['tipoFeed'] == 'TipoFeed.noticia' ? TipoFeed.noticia : 
+                feed['tipoFeed'] == 'TipoFeed.evento' ? TipoFeed.evento
+                : null ,
       dataPublicacao: DateTime.parse(feed['dataPublicacao']),
       estado: feed['estado'] == 'EstadosFeed.RJ' ? EstadosFeed.RJ : 
-                        feed['estado'] == 'EstadosFeed.SP' ? EstadosFeed.SP : 
-                        feed['estado'] == 'EstadosFeed.MG' ? EstadosFeed.MG : 
-                        feed['estado'] == 'EstadosFeed.SC' ? EstadosFeed.SC : 
-                        feed['estado'] == 'EstadosFeed.TODOS' ? EstadosFeed.TODOS : 
-                        null ,
+              feed['estado'] == 'EstadosFeed.SP' ? EstadosFeed.SP : 
+              feed['estado'] == 'EstadosFeed.MG' ? EstadosFeed.MG : 
+              feed['estado'] == 'EstadosFeed.SC' ? EstadosFeed.SC : 
+              feed['estado'] == 'EstadosFeed.TODOS' ? EstadosFeed.TODOS : 
+              null ,
       //curtidas: feed['curtidas'] ,
       //favorito: feed['favorito'] ,
       //like: feed['like'] ,
@@ -77,10 +77,8 @@ class FeedMODEL with ChangeNotifier {
   //String toJson() => json.encode(paraMap());
   //factory FeedMODEL.fromJson(String source) => FeedMODEL.daAPI(json.decode(source));
   
-  dataPublicacaoAsFormat(dataPublicacao) {
-    return Text(
-      DateFormat('dd/MM/yyyy - hh:mm').format(dataPublicacao),
-    );
+  dataPublicacaoAsFormat() {
+    return DateFormat('dd/MM/yyyy - hh:mm').format(dataPublicacao);
   }
 
   String get tipoFeedAsText {

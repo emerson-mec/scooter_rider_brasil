@@ -22,18 +22,16 @@ class _AuthFormState extends State<AuthForm> {
   // MÉTODO SELECT ESTADO ///////////////////////////////
   final estados = const [
     "Selecione seu estado*",
-    "Rio de Janeiro",
-    "São Paulo",
-    "Minas Gerais",
-    "Santa Catarina",
-    "Paraná"
+    "RJ",
+    "SP",
+    "MG",
+    "SC",
   ];
   int selectedIndex = 0;
   List<Widget> _buildItem() {
     _authData.estado = estados[selectedIndex];
     return estados.map((val) => MySelectionItem(title: val)).toList();
   }
-  // ACABA MÉTODO SELECT ESTADO ///////////////////////////////
 
   _submit() {
     bool isValid = _formKey.currentState.validate();
@@ -53,7 +51,6 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       padding: EdgeInsets.only(bottom: 40,top: 30),

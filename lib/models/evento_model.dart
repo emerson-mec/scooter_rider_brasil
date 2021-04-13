@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EventoMODEL {
   final String id;
@@ -43,9 +44,11 @@ class EventoMODEL {
     );
   }
 
-
   //String toJson() => json.encode(paraJson());
-
   //factory EventoMODEL.fromJson(String source) => EventoMODEL.daAPI(json.decode(source));
+
+
+  dataEventoAsFormat() => DateFormat('dd/MM/yyyy - hh:mm').format(dataEvento);
+  
 }
 
