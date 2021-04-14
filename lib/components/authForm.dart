@@ -105,8 +105,12 @@ class _AuthFormState extends State<AuthForm> {
                       mode: DirectSelectMode.tap,
                       items: _buildItem(),
                     ),
+
+
+                  
                   ],
                 ),
+                
               //NOME
               if (_authData.isSignup)
                 TextFormField(
@@ -128,6 +132,7 @@ class _AuthFormState extends State<AuthForm> {
                     return null;
                   },
                 ),
+              // EMAIL
               TextFormField(
                 key: ValueKey('email'), //para não embaralha os dados ao alternar tela de cadastro e login
                 decoration: InputDecoration(
@@ -148,6 +153,7 @@ class _AuthFormState extends State<AuthForm> {
                   return null;
                 },
               ),
+              // SENHA
               TextFormField(
                 key: ValueKey('password'), //para não embaralha os dados ao alternar tela de cadastro e login
                 obscureText: true,
@@ -168,6 +174,7 @@ class _AuthFormState extends State<AuthForm> {
                 },
               ),
               SizedBox(height: 40),
+              // ENTRAR OU CADASTRAR
               RaisedButton(
                 elevation: 10,
                 padding: EdgeInsets.symmetric(vertical: 13),
@@ -182,6 +189,7 @@ class _AuthFormState extends State<AuthForm> {
                 onPressed: _submit,
               ),
               SizedBox(height: 20),
+              // CRIAR CONTA
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(width: 0.5, color: Colors.black54),

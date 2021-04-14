@@ -93,7 +93,8 @@ class MeuDrawer extends StatelessWidget {
                   titulo: 'Pefil',
                   subtitulo: 'Gerenciar perfil',
                   onTap: () {
-                    print(DateTime.now());
+                    Navigator.of(context).pushNamed(ROTAS.PERFIL,);
+                    Scaffold.of(context).openDrawer();
                   },
                 ),
                 _createItem(

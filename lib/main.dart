@@ -6,6 +6,7 @@ import 'package:scooter_rider_brasil/providers/evento_provider.dart';
 import 'package:scooter_rider_brasil/providers/feed_provider.dart';
 import 'package:scooter_rider_brasil/screens/authScreen.dart';
 import 'package:scooter_rider_brasil/screens/eventos/form_evento_screen.dart';
+import 'package:scooter_rider_brasil/screens/perfil/perfil_screen.dart';
 import 'utils/rotas.dart';
 
 //SCREENS
@@ -71,6 +72,9 @@ class MyApp extends StatelessWidget {
         home: StreamBuilder(
             stream: FirebaseAuth.instance.onAuthStateChanged,
             builder: (ctx, userSnapshot) {
+              if(userSnapshot.connectionState == ConnectionState.waiting) {
+                return FeedScreen(); // gambiarra
+              }
               if (userSnapshot.hasData) {
                 return FeedScreen();
               } else {
@@ -88,6 +92,7 @@ class MyApp extends StatelessWidget {
           ROTAS.FORMULARIOFEED: (context) => FormularioFeedScreen(),
           ROTAS.FORMULARIOEVENTO: (context) => FormularioEventoScreen(),
           ROTAS.EVENTOS: (context) => EventoScreen(),
+          ROTAS.PERFIL: (context) => PerfilScreen(),
         },
       ),
     );

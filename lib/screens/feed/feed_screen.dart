@@ -22,7 +22,7 @@ class _FeedScreenState extends State<FeedScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          actions: [Icon(Icons.menu, color: Colors.black87)],
+          actions: [Icon(Icons.menu, color: Color(0xFF161616))],
           elevation: 10,
           flexibleSpace: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +70,6 @@ class _FeedScreenState extends State<FeedScreen> {
                 }
 
             String estado =  snapshot.data;
-            print(estado);
 
             return StreamBuilder(
                 stream: feedProvider.loadFeed('EstadosFeed.$estado'),

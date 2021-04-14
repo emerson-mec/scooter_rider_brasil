@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -240,11 +239,11 @@ class _DetalheEventoState extends State<DetalheEvento> {
                         return ListView.builder(
                           itemCount: snap.length,
                           itemBuilder: (context, i) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(snap[i]['nome']),
-                                Text(snap[i]['email']),
+                                Divider(height: 8, color: Colors.white60,),
                               ],
                             );
                           },

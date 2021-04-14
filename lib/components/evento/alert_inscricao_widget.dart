@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'package:scooter_rider_brasil/models/evento_model.dart';
 import 'package:scooter_rider_brasil/providers/auth_provider.dart';
-import 'package:scooter_rider_brasil/providers/evento_provider.dart';
 
 class AlertInscricaoWidget extends StatefulWidget {
   final EventoMODEL eventoModalRoute;
@@ -42,7 +39,6 @@ class _AlertInscricaoWidgetState extends State<AlertInscricaoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    EventoProvider itemRaw = Provider.of<EventoProvider>(context);
 
     return SingleChildScrollView(
       child: AlertDialog(

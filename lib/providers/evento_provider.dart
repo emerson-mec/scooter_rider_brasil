@@ -52,7 +52,7 @@ class EventoProvider with ChangeNotifier {
         "${currentUser.uid}": {
           'email': '${user["email"]}',
           'nome': '${user["nome"]}',
-          'id': '${user["nome"]}',
+          'id': '${user["id"]}',
         }
       }
     }, merge: true);
