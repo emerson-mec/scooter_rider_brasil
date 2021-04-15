@@ -5,6 +5,15 @@ import 'package:flutter/material.dart';
 
 class PerfilScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
+  final _openDropDownProgKey = GlobalKey<DropdownSearchState<String>>();
+
+  Future _saveForm() async {
+    bool isValid = _formKey.currentState.validate();
+
+    if (!isValid) return;
+
+    _formKey.currentState.save();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,161 +22,277 @@ class PerfilScreen extends StatelessWidget {
         title: Text('Perfil'),
         centerTitle: true,
       ),
-      body: FutureBuilder(
-        future: FirebaseAuth.instance.currentUser(),
-        builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return LinearProgressIndicator();
-          }
-          final userId = snapshot.data.uid;
+      body: SingleChildScrollView(
+        child: FutureBuilder(
+          future: FirebaseAuth.instance.currentUser(),
+          builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return LinearProgressIndicator();
+            }
+            final userId = snapshot.data.uid;
 
-          return StreamBuilder(
-            stream: Firestore.instance
-                .collection('users')
-                .document(userId)
-                .snapshots(),
-            builder: (ctx, AsyncSnapshot<DocumentSnapshot> chatSnapshot) {
-              if (chatSnapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
-              final user = chatSnapshot.data;
+            return StreamBuilder(
+              stream: Firestore.instance
+                  .collection('users')
+                  .document(userId)
+                  .snapshots(),
+              builder: (ctx, AsyncSnapshot<DocumentSnapshot> chatSnapshot) {
+                if (chatSnapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                final user = chatSnapshot.data;
 
-              return Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      maxLines: 1,
-                      maxLength: 100,
-                      initialValue: user['nome'],
-                      decoration: InputDecoration(labelText: 'Nome'),
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value.trim().isEmpty) {
-                          return 'Informe um nome válido';
-                        }
-                        if (value.trim().length <= 2) {
-                          return 'Informe um nome com no mínimo 3 letras!';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: user['email'],
-                      decoration: InputDecoration(labelText: 'E-mail'),
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value.trim().isEmpty) {
-                          return 'Informe um e-mail válido';
-                        }
-                        if (value.trim().length <= 2) {
-                          return 'Informe um e-mail com no mínimo 3 letras!';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: user['estado'],
-                      decoration: InputDecoration(labelText: 'Estado'),
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value.trim().isEmpty) {
-                          return 'Informe um estado';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: user['id'],
-                      decoration: InputDecoration(labelText: 'ID'),
-                      textInputAction: TextInputAction.next,
-                    ),
-                   
-                   // CLUBE
-                    StreamBuilder(
-                      stream: Firestore.instance
-                          .collection('clube')
-                          .where("estado", whereIn: ['${user['estado']}'])
-                          .snapshots()
-                          .map((snapshot) => snapshot.documents),
-                      builder: (context, AsyncSnapshot snapshot){
-                        if(snapshot.connectionState == ConnectionState.waiting){
-                          return Column(
-                            children: [
-                              CircularProgressIndicator(),
-                              Text('Carregando'),
-                            ],
-                          );
-                        }
+                return Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          maxRadius: 100,
+                          backgroundColor: Colors.blue,
+                          backgroundImage: NetworkImage('https://www.leadsdeconsorcio.com.br/blog/wp-content/uploads/2019/11/25.jpg'),
+                        ),
 
-                        List snapClube = snapshot.data;
+                        Text('ID: ${user['id']}'),
 
-                        bool temEvento = snapClube.isNotEmpty;
+                        TextFormField(
+                          onSaved: (value) async {
+                            await Firestore.instance
+                                .collection('users')
+                                .document(userId)
+                                .setData(
+                              {
+                                'nome': '$value',
+                              },
+                              merge: true,
+                            );
+                            //_formData['titulo'] = value;
+                          },
+                          maxLines: 1,
+                          maxLength: 30,
+                          initialValue: user['nome'],
+                          decoration: InputDecoration(labelText: 'Nome'),
+                          textInputAction: TextInputAction.next,
+                          validator: (value) {
+                            if (value.trim().isEmpty) {
+                              return 'Informe um nome válido';
+                            }
+                            if (value.trim().length <= 2) {
+                              return 'Informe um nome com no mínimo 3 letras!';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          readOnly: true,
+                          initialValue: user['email'],
+                          decoration: InputDecoration(labelText: 'E-mail'),
+                          textInputAction: TextInputAction.next,
+                          validator: (value) {
+                            if (value.trim().isEmpty) {
+                              return 'Informe um e-mail válido';
+                            }
+                            if (value.trim().length <= 2) {
+                              return 'Informe um e-mail com no mínimo 3 letras!';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          onSaved: (value) async {
+                            await Firestore.instance
+                                .collection('users')
+                                .document(userId)
+                                .setData(
+                              {
+                                'estado': '${value.toUpperCase()}',
+                              },
+                              merge: true,
+                            );
+                          },
+                          initialValue: user['estado'],
+                          decoration: InputDecoration(
+                              labelText: 'Estado (RJ, SP, MG ou SC)'),
+                          textInputAction: TextInputAction.next,
+                          validator: (value) {
+                            if (value.isEmpty ||
+                                value.length > 2 ||
+                                value.length == 1)
+                              return 'Digite RJ, SP, MG ou SC!';
 
-                        List  a = snapClube.map((e) => e).toList();
+                            if (value.toUpperCase() != "RJ" &&
+                                value.toUpperCase() != "SP" &&
+                                value.toUpperCase() != "MG" &&
+                                value.toUpperCase() != "SC") {
+                              return 'Digite RJ, SP, MG ou SC';
+                            }
 
-                        print(a[0]['id']);
+                            return null;
+                          },
+                        ),
                         
-                        return temEvento ? Container(
-                          margin: EdgeInsets.only(top: 30),
-                          padding: EdgeInsets.all(16),
-                          color: Colors.grey[200],
-                          child: Column(
-                            children: [
-                              Text('CLUBE:',style: TextStyle(fontWeight: FontWeight.bold),),
 
-                              DropdownSearch<String>(
-                                mode: Mode.BOTTOM_SHEET,
-                                showSelectedItem: true,
-                                items: snapClube.map((e) => e['clube'].toString()).toList(),
-                                label: "Clube",
-                                //popupItemDisabled: (String s) => s.startsWith('T'),
-                                selectedItem: user['clube'], 
-                                enabled: true,
-                                showSearchBox: true,
-                                
-                                onChanged: (String value) async {
+                        // CLUBE
+                        StreamBuilder(
+                          stream: Firestore.instance
+                              .collection('clube')
+                              .where("estado", whereIn: ['${user['estado']}'])
+                              .snapshots()
+                              .map((snapshot) => snapshot.documents),
+                          builder: (context, AsyncSnapshot snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Column(
+                                children: [
+                                  CircularProgressIndicator(),
+                                  Text('Carregando'),
+                                ],
+                              );
+                            }
 
-                                  await Firestore.instance.collection('users').document(userId).setData(
-                                    {
-                                      'clube' : '$value',
-                                    }, merge: true,
+                            List snapClube = snapshot.data;
+
+                            bool temEvento = snapClube.isNotEmpty;
+
+                            return temEvento
+                                ? Container(
+                                    margin: EdgeInsets.only(top: 30),
+                                    child: Column(
+                                      children: [
+                                       
+                                        DropdownSearch<String>(
+                                          mode: Mode.BOTTOM_SHEET,
+                                          showSelectedItem: true,
+                                          showClearButton: true,
+                                          items: snapClube
+                                              .map((e) => e['clube'].toString())
+                                              .toList(),
+                                          label: "Clube",
+                                          //popupItemDisabled: (String s) => s.startsWith('T'),
+                                          selectedItem: user['clube'],
+                                          enabled: true,
+                                          showSearchBox: true,
+
+                                          onChanged: (String value) async {
+                                            await Firestore.instance
+                                                .collection('users')
+                                                .document(userId)
+                                                .setData(
+                                              {
+                                                'clube': '$value',
+                                              },
+                                              merge: true,
+                                            );
+                                          },
+                                          popupTitle: Text('Busque por um Scooter Clube'),
+                                          validator: (String item) {
+                                            if (item == null)
+                                              return "Requisição falhou";
+                                            else
+                                              return null;
+                                          },
+
+               
+                 
+
+                                       isFilteredOnline: true,
+
+                                        dropdownBuilder: (BuildContext buildContext, n,a) {
+                                          return Container(
+                                              child: (n == null)
+                                                  ? ListTile(
+                                                      contentPadding: EdgeInsets.all(0),
+                                                      leading: Icon(Icons.search),
+                                                      title: Text("Nenhum clube selecionado"),
+                                                    )
+                                                  : ListTile(
+                                                      contentPadding: EdgeInsets.all(0),
+                                                      leading: CircleAvatar(
+                                                        backgroundImage: NetworkImage('https://image.freepik.com/vetores-gratis/logotipo-motoclub-vetor_23-2147491888.jpg'),
+                                                      ),
+                                                      title: Text(a),
+                                                      subtitle: Text(
+                                                        '${a}'
+                                                      ),
+                                                    ),
+                                            );
+                                        }
+ 
+
+
+
+
+
+                                        ),
+                                      
+                                      ],
+                                    ),
+                                  )
+                                : Column(
+                                    children: [
+                                      SizedBox(height: 30),
+                                      DropdownSearch<String>(
+                                        label: "Clube",
+                                        selectedItem:
+                                            'Não encontramos clube no seu estado',
+                                        enabled: false,
+                                      ),
+                                    ],
                                   );
-                                }, 
-                                popupTitle: Text('Busque por um Scooter Clube'),
-                                validator: (String item) {
-                                  if (item == null)
-                                    return "Required field";
-                                  else if (item == "Brazil")
-                                    return "Invalid item";
-                                  else
-                                    return null;
-                                },
-                                key: null,
+                          },
+                        ),
+                       
+
+
+                        SizedBox(height: 20),
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  icon: Icon(Icons.save),
+                                  onPressed: () async {
+                                    await _saveForm();
+                                    //Navigator.of(context).pop();
+                                  },
+                                  label: Text("SALVAR"),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.blue, // background
+                                    onPrimary: Colors.white, // foreground
+                                  ),
+                                ),
                               ),
-
-
+                              SizedBox(width: 20),
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  onPressed: () async {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: Icon(Icons.cancel),
+                                  label: Text("CANCELAR"),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.redAccent, // background
+                                    onPrimary: Colors.white, // foreground
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                        ) : Column(
-                          children: [
-                            SizedBox(height: 30),
-                            DropdownSearch<String>(
-                                label: "Clube",
-                                selectedItem: 'Não encontramos clube no seu estado', 
-                                enabled: false,
-                              ),
-                          ],
-                        );
-                      },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
 }
+
+
+ 

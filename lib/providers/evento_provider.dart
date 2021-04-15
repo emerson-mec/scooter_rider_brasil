@@ -69,10 +69,5 @@ class EventoProvider with ChangeNotifier {
       }
     },merge: true ).then((value) => print('value'));
 
-
-
-
-
-
   }
 }
