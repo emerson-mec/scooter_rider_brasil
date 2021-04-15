@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scooter_rider_brasil/providers/auth_provider.dart';
+import 'package:scooter_rider_brasil/providers/clube_provider.dart';
 import 'package:scooter_rider_brasil/providers/evento_provider.dart';
 import 'package:scooter_rider_brasil/providers/feed_provider.dart';
 import 'package:scooter_rider_brasil/screens/authScreen.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => EventoProvider()),
         ChangeNotifierProvider(create: (_) => FeedProvider()),
+        ChangeNotifierProvider(create: (_) => ClubeProvider()),
       ],
       child: MaterialApp(
         title: 'Scooter Rider Brasil',

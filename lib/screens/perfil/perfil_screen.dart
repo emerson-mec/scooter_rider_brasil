@@ -50,7 +50,7 @@ class PerfilScreen extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           maxRadius: 100,
-                          backgroundColor: Colors.blue,
+                          backgroundColor: Colors.grey[200],
                           backgroundImage: NetworkImage(
                               'https://www.leadsdeconsorcio.com.br/blog/wp-content/uploads/2019/11/25.jpg'),
                         ),
