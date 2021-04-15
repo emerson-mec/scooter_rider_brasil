@@ -51,7 +51,8 @@ class PerfilScreen extends StatelessWidget {
                         CircleAvatar(
                           maxRadius: 100,
                           backgroundColor: Colors.blue,
-                          backgroundImage: NetworkImage('https://www.leadsdeconsorcio.com.br/blog/wp-content/uploads/2019/11/25.jpg'),
+                          backgroundImage: NetworkImage(
+                              'https://www.leadsdeconsorcio.com.br/blog/wp-content/uploads/2019/11/25.jpg'),
                         ),
 
                         Text('ID: ${user['id']}'),
@@ -131,7 +132,6 @@ class PerfilScreen extends StatelessWidget {
                             return null;
                           },
                         ),
-                        
 
                         // CLUBE
                         StreamBuilder(
@@ -155,95 +155,119 @@ class PerfilScreen extends StatelessWidget {
 
                             bool temEvento = snapClube.isNotEmpty;
 
-                            return temEvento
-                                ? Container(
-                                    margin: EdgeInsets.only(top: 30),
-                                    child: Column(
-                                      children: [
+                            if (temEvento) {
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      margin:
+                                          EdgeInsets.only(top: 30, right: 5),
+                                      child: Column(
+                                        children: [
+                                          DropdownSearch<String>(
+                                            dropdownBuilderSupportsNullItem:
+                                                true,
+                                            searchBoxDecoration:
+                                                InputDecoration(
+                                                    suffixIcon:
+                                                        Icon(Icons.search),
+                                                    hintText:
+                                                        'Buscar Scooter Clube'),
+                                            mode: Mode.BOTTOM_SHEET,
+                                            showSelectedItem: true,
+                                            items: snapClube
+                                                .map((e) =>
+                                                    e['clube'].toString())
+                                                .toList(),
+                                            //label: "Clube",
+                                         
+                                            //popupItemDisabled: (String s) => s.startsWith('T'),
+                                            selectedItem: user['clube'],
+                                            enabled: true,
+                                            showSearchBox: true,
+                                            onChanged: (String value) async {
+                                              await Firestore.instance
+                                                  .collection('users')
+                                                  .document(userId)
+                                                  .setData(
+                                                {
+                                                  'clube': '$value',
+                                                },
+                                                merge: true,
+                                              );
+                                            },
+
                                        
-                                        DropdownSearch<String>(
-                                          mode: Mode.BOTTOM_SHEET,
-                                          showSelectedItem: true,
-                                          showClearButton: true,
-                                          items: snapClube
-                                              .map((e) => e['clube'].toString())
-                                              .toList(),
-                                          label: "Clube",
-                                          //popupItemDisabled: (String s) => s.startsWith('T'),
-                                          selectedItem: user['clube'],
-                                          enabled: true,
-                                          showSearchBox: true,
-
-                                          onChanged: (String value) async {
-                                            await Firestore.instance
-                                                .collection('users')
-                                                .document(userId)
-                                                .setData(
-                                              {
-                                                'clube': '$value',
-                                              },
-                                              merge: true,
-                                            );
-                                          },
-                                          popupTitle: Text('Busque por um Scooter Clube'),
-                                          validator: (String item) {
-                                            if (item == null)
-                                              return "Requisição falhou";
-                                            else
-                                              return null;
-                                          },
-
-               
-                 
-
-                                       isFilteredOnline: true,
-
-                                        dropdownBuilder: (BuildContext buildContext, n,a) {
-                                          return Container(
-                                              child: (n == null)
-                                                  ? ListTile(
-                                                      contentPadding: EdgeInsets.all(0),
-                                                      leading: Icon(Icons.search),
-                                                      title: Text("Nenhum clube selecionado"),
-                                                    )
-                                                  : ListTile(
-                                                      contentPadding: EdgeInsets.all(0),
-                                                      leading: CircleAvatar(
-                                                        backgroundImage: NetworkImage('https://image.freepik.com/vetores-gratis/logotipo-motoclub-vetor_23-2147491888.jpg'),
+                                            isFilteredOnline: true,
+                                            dropdownBuilder:
+                                                (BuildContext buildContext, n,
+                                                    a) {
+                                              return Container(
+                                                child: (n == null)
+                                                    ? ListTile(
+                                                        contentPadding:
+                                                            EdgeInsets.all(0),
+                                                        leading:
+                                                            Icon(Icons.search),
+                                                        title: Text(
+                                                            "Nenhum clube selecionado"),
+                                                      )
+                                                    : ListTile(
+                                                        contentPadding:
+                                                            EdgeInsets.all(0),
+                                                        leading: CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                                  'https://image.freepik.com/vetores-gratis/logotipo-motoclub-vetor_23-2147491888.jpg'),
+                                                        ),
+                                                        title: Text(a),
+                                                        subtitle: Text('${a}'),
                                                       ),
-                                                      title: Text(a),
-                                                      subtitle: Text(
-                                                        '${a}'
-                                                      ),
-                                                    ),
-                                            );
-                                        }
- 
-
-
-
-
-
-                                        ),
-                                      
-                                      ],
-                                    ),
-                                  )
-                                : Column(
-                                    children: [
-                                      SizedBox(height: 30),
-                                      DropdownSearch<String>(
-                                        label: "Clube",
-                                        selectedItem:
-                                            'Não encontramos clube no seu estado',
-                                        enabled: false,
+                                              );
+                                            },
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  );
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 70,
+                                    //color: Colors.redAccent,
+                                    alignment: Alignment.center,
+                                    child: IconButton(
+                                      icon: Icon(Icons.cancel),
+                                      onPressed: () async {
+                                        await Firestore.instance
+                                            .collection('users')
+                                            .document(userId)
+                                            .setData(
+                                          {
+                                            'clube': FieldValue.delete(),
+                                          },
+                                          merge: true,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return Column(
+                                children: [
+                                  SizedBox(height: 30),
+                                  DropdownSearch<String>(
+                                    label: "Clube",
+                                    selectedItem:
+                                        'Não encontramos clube no seu estado',
+                                    enabled: false,
+                                  ),
+                                ],
+                              );
+                            }
                           },
                         ),
-                       
-
 
                         SizedBox(height: 20),
                         Container(
@@ -293,6 +317,3 @@ class PerfilScreen extends StatelessWidget {
     );
   }
 }
-
-
- 
