@@ -56,7 +56,7 @@ class MeuDrawer extends StatelessWidget {
                     if (chatSnapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     }
-                    return Text("${chatSnapshot.data['nome']} - ${chatSnapshot.data['estado']} ",style: TextStyle(fontWeight: FontWeight.bold),);
+                    return Text("${chatSnapshot.data['nome']}",style: TextStyle(fontWeight: FontWeight.bold),);
                   },
                   
                 );
@@ -69,7 +69,7 @@ class MeuDrawer extends StatelessWidget {
                 if(snapshot.connectionState == ConnectionState.waiting){
                   return Text('carregando...');
                 }
-                return Text(snapshot.data.email);
+                return Text(snapshot.data.email, style: TextStyle(color: Colors.grey[500]));
               },
             ),
 
@@ -91,7 +91,7 @@ class MeuDrawer extends StatelessWidget {
                 _createItem(
                   icon: Icons.person,
                   titulo: 'Pefil',
-                  subtitulo: 'Gerenciar perfil',
+                  subtitulo: 'Editar perfil, estado ou clube',
                   onTap: () {
                     Navigator.of(context).pushNamed(ROTAS.PERFIL,);
                     Scaffold.of(context).openDrawer();
@@ -100,7 +100,7 @@ class MeuDrawer extends StatelessWidget {
                 _createItem(
                   icon: Icons.miscellaneous_services,
                   titulo: 'Gerenciar',
-                  subtitulo: 'Feed de notícias e eventos',
+                  subtitulo: 'Editar/criar Feed ou evento',
                   onTap: () {
                     Navigator.of(context).pushNamed(ROTAS.GERENCIAR);
                     Scaffold.of(context).openDrawer();

@@ -18,45 +18,45 @@ class PerfilScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Perfil'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text('Editar Perfil'), centerTitle: true),
       body: SingleChildScrollView(
-        child: FutureBuilder(
-          future: FirebaseAuth.instance.currentUser(),
-          builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return LinearProgressIndicator();
-            }
-            final userId = snapshot.data.uid;
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 26.0),
+          child: FutureBuilder(
+            future: FirebaseAuth.instance.currentUser(),
+            builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return LinearProgressIndicator();
+              }
+              final userId = snapshot.data.uid;
 
-            return StreamBuilder(
-              stream: Firestore.instance
-                  .collection('users')
-                  .document(userId)
-                  .snapshots(),
-              builder: (ctx, AsyncSnapshot<DocumentSnapshot> chatSnapshot) {
-                if (chatSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                final user = chatSnapshot.data;
+              return StreamBuilder(
+                stream: Firestore.instance
+                    .collection('users')
+                    .document(userId)
+                    .snapshots(),
+                builder: (ctx, AsyncSnapshot<DocumentSnapshot> chatSnapshot) {
+                  if (chatSnapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  final user = chatSnapshot.data;
 
-                return Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Form(
+                  return Form(
                     key: _formKey,
                     child: Column(
                       children: [
+
+                        // AVATAR
                         CircleAvatar(
                           maxRadius: 100,
                           backgroundColor: Colors.grey[200],
                           backgroundImage: NetworkImage(
                               'https://www.leadsdeconsorcio.com.br/blog/wp-content/uploads/2019/11/25.jpg'),
                         ),
-
+                        SizedBox(height: 15),
                         Text('ID: ${user['id']}'),
 
+                        // NOME
                         TextFormField(
                           onSaved: (value) async {
                             await Firestore.instance
@@ -71,7 +71,7 @@ class PerfilScreen extends StatelessWidget {
                             //_formData['titulo'] = value;
                           },
                           maxLines: 1,
-                          maxLength: 30,
+                          maxLength: 34,
                           initialValue: user['nome'],
                           decoration: InputDecoration(labelText: 'Nome'),
                           textInputAction: TextInputAction.next,
@@ -85,6 +85,8 @@ class PerfilScreen extends StatelessWidget {
                             return null;
                           },
                         ),
+
+                        // EMAIL
                         TextFormField(
                           readOnly: true,
                           initialValue: user['email'],
@@ -100,6 +102,10 @@ class PerfilScreen extends StatelessWidget {
                             return null;
                           },
                         ),
+
+                        SizedBox(height: 20),
+
+                        // ESTADO
                         TextFormField(
                           onSaved: (value) async {
                             await Firestore.instance
@@ -133,6 +139,8 @@ class PerfilScreen extends StatelessWidget {
                           },
                         ),
 
+                        SizedBox(height: 10),
+                        
                         // CLUBE
                         StreamBuilder(
                           stream: Firestore.instance
@@ -182,7 +190,7 @@ class PerfilScreen extends StatelessWidget {
                                                     e['clube'].toString())
                                                 .toList(),
                                             //label: "Clube",
-                                         
+
                                             //popupItemDisabled: (String s) => s.startsWith('T'),
                                             selectedItem: user['clube'],
                                             enabled: true,
@@ -199,7 +207,6 @@ class PerfilScreen extends StatelessWidget {
                                               );
                                             },
 
-                                       
                                             isFilteredOnline: true,
                                             dropdownBuilder:
                                                 (BuildContext buildContext, n,
@@ -263,6 +270,7 @@ class PerfilScreen extends StatelessWidget {
                                         'Não encontramos clube no seu estado',
                                     enabled: false,
                                   ),
+                                  SizedBox(height: 25),
                                 ],
                               );
                             }
@@ -270,6 +278,8 @@ class PerfilScreen extends StatelessWidget {
                         ),
 
                         SizedBox(height: 20),
+
+                        // BOTÕES
                         Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -305,13 +315,15 @@ class PerfilScreen extends StatelessWidget {
                             ],
                           ),
                         ),
+                      
+                      
                       ],
                     ),
-                  ),
-                );
-              },
-            );
-          },
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );
