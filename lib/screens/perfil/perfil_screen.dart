@@ -2,10 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scooter_rider_brasil/models/clube_model.dart';
+import 'package:scooter_rider_brasil/providers/clube_provider.dart';
 
-class PerfilScreen extends StatelessWidget {
+class PerfilScreen extends StatefulWidget {
+  @override
+  _PerfilScreenState createState() => _PerfilScreenState();
+}
+
+class _PerfilScreenState extends State<PerfilScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final _openDropDownProgKey = GlobalKey<DropdownSearchState<String>>();
+
+  TextEditingController textEditingController = TextEditingController();
 
   Future _saveForm() async {
     bool isValid = _formKey.currentState.validate();
@@ -17,6 +28,8 @@ class PerfilScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var clubePovider = Provider.of<ClubeProvider>(context);
+
     return Scaffold(
       appBar: AppBar(title: Text('Editar Perfil'), centerTitle: true),
       body: SingleChildScrollView(
@@ -45,7 +58,6 @@ class PerfilScreen extends StatelessWidget {
                     key: _formKey,
                     child: Column(
                       children: [
-
                         // AVATAR
                         CircleAvatar(
                           maxRadius: 100,
@@ -53,6 +65,7 @@ class PerfilScreen extends StatelessWidget {
                           backgroundImage: NetworkImage(
                               'https://www.leadsdeconsorcio.com.br/blog/wp-content/uploads/2019/11/25.jpg'),
                         ),
+                       
                         SizedBox(height: 15),
                         Text('ID: ${user['id']}'),
 
@@ -116,6 +129,8 @@ class PerfilScreen extends StatelessWidget {
                                 'estado': '${value.toUpperCase()}',
                               },
                               merge: true,
+
+                              
                             );
                           },
                           initialValue: user['estado'],
@@ -140,17 +155,12 @@ class PerfilScreen extends StatelessWidget {
                         ),
 
                         SizedBox(height: 10),
-                        
+
                         // CLUBE
                         StreamBuilder(
-                          stream: Firestore.instance
-                              .collection('clube')
-                              .where("estado", whereIn: ['${user['estado']}'])
-                              .snapshots()
-                              .map((snapshot) => snapshot.documents),
-                          builder: (context, AsyncSnapshot snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
+                          stream: clubePovider.loadClube('${user['estado']}'),
+                          builder: (context, AsyncSnapshot<List<ClubeMODEL>> snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
                               return Column(
                                 children: [
                                   CircularProgressIndicator(),
@@ -159,87 +169,64 @@ class PerfilScreen extends StatelessWidget {
                               );
                             }
 
-                            List snapClube = snapshot.data;
+                            List<ClubeMODEL> snapClube = snapshot.data;
+                            
 
                             bool temEvento = snapClube.isNotEmpty;
+                            
 
-                            if (temEvento) {
+
+                              if (temEvento) {
                               return Row(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Expanded(
                                     child: Container(
-                                      margin:
-                                          EdgeInsets.only(top: 30, right: 5),
+                                      margin:EdgeInsets.only(top: 30, right: 5),
                                       child: Column(
                                         children: [
-                                          DropdownSearch<String>(
-                                            dropdownBuilderSupportsNullItem:
-                                                true,
-                                            searchBoxDecoration:
-                                                InputDecoration(
-                                                    suffixIcon:
-                                                        Icon(Icons.search),
-                                                    hintText:
-                                                        'Buscar Scooter Clube'),
-                                            mode: Mode.BOTTOM_SHEET,
-                                            showSelectedItem: true,
-                                            items: snapClube
-                                                .map((e) =>
-                                                    e['clube'].toString())
-                                                .toList(),
-                                            //label: "Clube",
-
-                                            //popupItemDisabled: (String s) => s.startsWith('T'),
-                                            selectedItem: user['clube'],
-                                            enabled: true,
+                                          DropdownSearch<ClubeMODEL>(
+                                            label: "Clube",
                                             showSearchBox: true,
-                                            onChanged: (String value) async {
+                                            searchBoxDecoration: InputDecoration(suffixIcon: Icon(Icons.search), hintText: 'Buscar Scooter Clube'),
+                                            mode: Mode.BOTTOM_SHEET,
+                                            itemAsString: (ClubeMODEL clube) => clube.clube,
+                                            selectedItem: user['clube'] == null ? ClubeMODEL(clube: 'Faça parte de um clube') : ClubeMODEL(clube: '${user['clube']}'),
+                                            popupItemBuilder: _customPopupItemBuilderExample,
+                                            onFind: (String filter) async {
+                                              final Firestore _db = Firestore.instance;
+                                                  return _db
+                                                      .collection('clube')
+                                                      .where("estado", whereIn: ['${user['estado']}'])
+                                                      .getDocuments()
+                                                      .then((snapshot) => snapshot.documents.reversed
+                                                          .map((doc) => ClubeMODEL.fromMap(doc.data))
+                                                          .toList(),
+                                                        );
+                                            },
+                                            onChanged: (ClubeMODEL value) async {
                                               await Firestore.instance
                                                   .collection('users')
                                                   .document(userId)
                                                   .setData(
                                                 {
-                                                  'clube': '$value',
+                                                  'clube': '${value.clube}',
+                                                  'idClube': '${value.id}',
                                                 },
                                                 merge: true,
                                               );
                                             },
-
-                                            isFilteredOnline: true,
-                                            dropdownBuilder:
-                                                (BuildContext buildContext, n,
-                                                    a) {
-                                              return Container(
-                                                child: (n == null)
-                                                    ? ListTile(
-                                                        contentPadding:
-                                                            EdgeInsets.all(0),
-                                                        leading:
-                                                            Icon(Icons.search),
-                                                        title: Text(
-                                                            "Nenhum clube selecionado"),
-                                                      )
-                                                    : ListTile(
-                                                        contentPadding:
-                                                            EdgeInsets.all(0),
-                                                        leading: CircleAvatar(
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                                  'https://image.freepik.com/vetores-gratis/logotipo-motoclub-vetor_23-2147491888.jpg'),
-                                                        ),
-                                                        title: Text(a),
-                                                        subtitle: Text('${a}'),
-                                                      ),
-                                              );
-                                            },
+                                            
+ 
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  Container(
+                                  
+                          //////////// REMOVER CLUBE /////////////
+                                 Container(
                                     height: 70,
                                     //color: Colors.redAccent,
                                     alignment: Alignment.center,
@@ -252,30 +239,67 @@ class PerfilScreen extends StatelessWidget {
                                             .setData(
                                           {
                                             'clube': FieldValue.delete(),
+                                            'idClube': FieldValue.delete(),
                                           },
                                           merge: true,
                                         );
                                       },
                                     ),
                                   ),
+
+
                                 ],
                               );
-                            } else {
+                            } 
+                            else {
                               return Column(
                                 children: [
                                   SizedBox(height: 30),
-                                  DropdownSearch<String>(
-                                    label: "Clube",
-                                    selectedItem:
-                                        'Não encontramos clube no seu estado',
-                                    enabled: false,
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 8,
+                                          child: Container(
+                                          child: DropdownSearch<String>(
+                                            label: "Clube",
+                                            selectedItem:
+                                                'Não encontramos clube no seu estado',
+                                            enabled: false,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                         child: Container(
+                                          height: 70,
+                                          //color: Colors.redAccent,
+                                          alignment: Alignment.center,
+                                          child: IconButton(
+                                            icon: Icon(Icons.cancel),
+                                            onPressed: () async {
+                                                      await Firestore.instance
+                                                    .collection('users')
+                                                    .document(userId)
+                                                    .setData(
+                                                  {
+                                                    'clube': FieldValue.delete(),
+                                                    'idClube': FieldValue.delete(),
+                                                  },
+                                                  merge: true,
+                                                );
+                                          },
+                                    ),
+                                  ),
+                                      ),
+                                    ],
                                   ),
                                   SizedBox(height: 25),
                                 ],
                               );
                             }
-                          },
+                            },
                         ),
+                        
 
                         SizedBox(height: 20),
 
@@ -315,8 +339,6 @@ class PerfilScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                      
-                      
                       ],
                     ),
                   );
@@ -329,3 +351,28 @@ class PerfilScreen extends StatelessWidget {
     );
   }
 }
+
+
+ 
+
+  Widget _customPopupItemBuilderExample(
+      BuildContext context, ClubeMODEL item, bool isSelected) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8),
+      decoration: !isSelected
+          ? null
+          : BoxDecoration(
+              border: Border.all(color: Theme.of(context).primaryColor),
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+            ),
+      child: ListTile(
+        selected: isSelected,
+        title: Text(item.clube),
+        subtitle: Text("${item.descricao}"),
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(item.imagemUrl),
+        ),
+      ),
+    );
+  }

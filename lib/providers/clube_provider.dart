@@ -7,11 +7,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ClubeProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
+  
 
-  Stream<List<ClubeMODEL>> loadClube(/*[String estado = 'EstadosFeed.RJ']*/) {
+  Stream<List<ClubeMODEL>> loadClube([String estado]) {
     return _db
         .collection('clube')
-        //.where("estado", whereIn: ['$estado', 'EstadosFeed.TODOS'])
+        .where("estado", whereIn: ['$estado'])
         .snapshots()
         .map((snapshot) => snapshot.documents.reversed
             .map((doc) => ClubeMODEL.fromMap(doc.data))

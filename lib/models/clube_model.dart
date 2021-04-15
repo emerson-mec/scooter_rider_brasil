@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 
 class ClubeMODEL {
   final String clube;
@@ -8,11 +7,11 @@ class ClubeMODEL {
   final String imagemUrl;
 
   ClubeMODEL({
-    @required this.clube,
+     this.clube,
     this.descricao,
-    @required this.estado,
-    @required this.id,
-    @required this.imagemUrl,
+     this.estado,
+     this.id,
+     this.imagemUrl,
   });
 
   Map<String, dynamic> toMap() {
