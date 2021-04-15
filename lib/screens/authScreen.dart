@@ -16,8 +16,7 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _isLogo = true;
   bool _isLoading = false;
 
-
-  Future<void>  _handleSubmit(AuthModel authData) async {
+  Future<void>  _submitForm(AuthModel authData) async {
     AuthResult authResult;
 
     setState(() =>_isLoading = true);
@@ -36,8 +35,9 @@ class _AuthScreenState extends State<AuthScreen> {
 
       final userData = {
         'nome' : authData.name,
-        'estado' : authData.estado,
+        'estado' : authData.estado.toString(),
         'email' : authData.emailUser,
+        'id' : authResult.user.uid,
       };
 
       await Firestore.instance.collection('users').document(authResult.user.uid).setData(userData);
@@ -69,6 +69,10 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void _mostraLogo(booleano) => setState(() => _isLogo = !_isLogo);
   
+
+   
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +127,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                 Stack(
                   children: [
-                    AuthForm(_handleSubmit, _mostraLogo),
+                    AuthForm(_submitForm, _mostraLogo),
                     if(_isLoading) Positioned.fill(
                       child: Container(
                         margin: EdgeInsets.symmetric(horizontal: 20),

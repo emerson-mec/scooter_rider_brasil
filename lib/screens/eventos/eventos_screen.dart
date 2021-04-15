@@ -32,7 +32,7 @@ class _EventoScreenState extends State<EventoScreen> {
                     Text(
                       'Eventos',
                       style: TextStyle(
-                        color: Colors.white,
+                          color: Colors.white,
                           fontSize: 20,
                           fontFamily: 'Bookman',
                           fontWeight: FontWeight.bold),
@@ -61,9 +61,9 @@ class _EventoScreenState extends State<EventoScreen> {
               },
             );
           }),
-       //bottomNavigationBar: MenuBottom(),
+      //bottomNavigationBar: MenuBottom(),
 
-       //drawer: MeuDrawer(),
+      //drawer: MeuDrawer(),
 
       //endDrawer: MeuDrawer(),
     );

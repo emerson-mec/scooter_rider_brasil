@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:scooter_rider_brasil/utils/rotas.dart';
 
 class MeuDrawer extends StatelessWidget {
-  Widget _createItem(
-      {IconData icon, String titulo, String subtitulo, Function onTap}) {
+  Widget _createItem({IconData icon, String titulo, String subtitulo, Function onTap}) {
     return Column(
       children: [
         ListTile(
@@ -46,20 +45,20 @@ class MeuDrawer extends StatelessWidget {
               builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
                 
                 if(snapshot.connectionState == ConnectionState.waiting){
-                  return CircularProgressIndicator();
+                  return LinearProgressIndicator();
                 }
-
                 final userId = snapshot.data.uid;
                 final a = Firestore.instance.collection('users').document(userId).snapshots();
 
                 return StreamBuilder(
-                  stream: a,
+                  stream:  a, 
                   builder: (ctx, AsyncSnapshot<DocumentSnapshot> chatSnapshot) {
                     if (chatSnapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     }
-                    return Text(chatSnapshot.data['nome'],style: TextStyle(fontWeight: FontWeight.bold),);
+                    return Text("${chatSnapshot.data['nome']} - ${chatSnapshot.data['estado']} ",style: TextStyle(fontWeight: FontWeight.bold),);
                   },
+                  
                 );
               },
             ),
@@ -68,7 +67,7 @@ class MeuDrawer extends StatelessWidget {
               future: FirebaseAuth.instance.currentUser(),
               builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
                 if(snapshot.connectionState == ConnectionState.waiting){
-                  return CircularProgressIndicator();
+                  return Text('carregando...');
                 }
                 return Text(snapshot.data.email);
               },
@@ -76,11 +75,12 @@ class MeuDrawer extends StatelessWidget {
 
             otherAccountsPictures: [
               IconButton(
-                icon: Icon(Icons.login,color: Colors.grey,),
+                icon: Icon(
+                  Icons.login,
+                  color: Colors.grey,
+                ),
                 onPressed: () {
                   FirebaseAuth.instance.signOut();
-                  // Provider.of<Auth>(context, listen: false).logout();
-                  //Navigator.of(context).pushReplacementNamed(ROTAS.AUTH_HOME);
                 } 
               ),
             ],
@@ -93,7 +93,8 @@ class MeuDrawer extends StatelessWidget {
                   titulo: 'Pefil',
                   subtitulo: 'Gerenciar perfil',
                   onTap: () {
-                    print(DateTime.now());
+                    Navigator.of(context).pushNamed(ROTAS.PERFIL,);
+                    Scaffold.of(context).openDrawer();
                   },
                 ),
                 _createItem(

@@ -9,4 +9,5 @@ class ROTAS {
   static const FORMULARIOFEED = '/formulario_feed';
   static const FORMULARIOEVENTO = '/formulario_evento';
   static const EVENTOS = '/eventos';
+  static const PERFIL = '/perfil';
 }

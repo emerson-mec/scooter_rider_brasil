@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -111,7 +109,7 @@ class _FormularioFeedScreenState extends State<FormularioEventoScreen> {
 
     try {
       if (_formData['id'] == null) {
-        await itemEvento.addEvento(newEvento).then((value) => print('adicionou'));
+        await itemEvento.addEvento(newEvento);
       } else {
        await itemEvento.updateEvento(newEvento);
       }

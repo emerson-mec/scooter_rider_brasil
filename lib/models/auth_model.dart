@@ -8,8 +8,9 @@ class AuthModel {
   String emailUser;
   String password;
   String estado;
+  String clube;
   AuthMode _mode = AuthMode.LOGIN;
-
+  
   bool get isSignup => _mode == AuthMode.SIGNUP;
   bool get isLogin => _mode == AuthMode.LOGIN;
 

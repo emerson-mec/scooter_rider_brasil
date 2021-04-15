@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scooter_rider_brasil/components/drawer.dart';
 import 'package:scooter_rider_brasil/models/feed_model.dart';
+import 'package:scooter_rider_brasil/providers/auth_provider.dart';
 import 'package:scooter_rider_brasil/providers/feed_provider.dart';
 //SCREENS
 import '../../components/feed/card_feed_widget.dart';
@@ -16,11 +17,12 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     FeedProvider feedProvider = Provider.of<FeedProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          actions: [Icon(Icons.menu, color: Colors.black87)],
+          actions: [Icon(Icons.menu, color: Color(0xFF161616))],
           elevation: 10,
           flexibleSpace: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -35,11 +37,11 @@ class _FeedScreenState extends State<FeedScreen> {
                       Text(
                         'Scooter Rider',
                         style: TextStyle(
-                            fontSize: 22,
-                            fontFamily: 'Bookman',
-                            fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ),
+                          fontSize: 22,
+                          fontFamily: 'Bookman',
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
                       ),
                       Text(
                         'B r a s i l'.toUpperCase(),
@@ -57,34 +59,45 @@ class _FeedScreenState extends State<FeedScreen> {
             ],
           ),
           // backgroundColor: Theme.of(context).primaryColor,
-         // backgroundColor: Colors.black87,
+          // backgroundColor: Colors.black87,
         ),
 
-        body: StreamBuilder(
-            stream: feedProvider.loadFeed(),
-            builder: (ctx, AsyncSnapshot<List<FeedMODEL>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
+        body: FutureBuilder(
+          future: authProvider.estadoUser(),
+          builder: (context, snapshot) {
+             if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
 
-              List<FeedMODEL> feedRAW = snapshot.data;
+            String estado =  snapshot.data;
 
-              return ListView.builder(
-                itemCount: feedRAW.length,
-                reverse: false,
-                itemBuilder: (context, i) {
-                  return Column(
-                    children: [
-                      Container(
-                        color: Colors.white,
-                        child: CardFeedWIDGET(feedRAW[i]),
-                      ),
-                      SizedBox(height: 15),
-                    ],
+            return StreamBuilder(
+                stream: feedProvider.loadFeed('EstadosFeed.$estado'),
+                builder: (ctx, AsyncSnapshot<List<FeedMODEL>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  List<FeedMODEL> feedRAW = snapshot.data;
+
+                  return ListView.builder(
+                    itemCount: feedRAW.length,
+                    reverse: false,
+                    itemBuilder: (context, i) {
+                      return Column(
+                        children: [
+                          Container(
+                            color: Colors.white,
+                            child: CardFeedWIDGET(feedRAW[i]),
+                          ),
+                          SizedBox(height: 15),
+                        ],
+                      );
+                    },
                   );
-                },
-              );
-            }),
+                });
+          },
+        ),
         backgroundColor: Colors.grey[200],
         bottomNavigationBar: MenuBottom(),
         //drawer: MeuDrawer(),

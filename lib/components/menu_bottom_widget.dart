@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:scooter_rider_brasil/utils/rotas.dart';
 
 class MenuBottom extends StatelessWidget {
@@ -9,22 +8,22 @@ class MenuBottom extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Expanded(
-            child: IconButton(
-              icon: Icon(
-                FontAwesomeIcons.newspaper,
-                color: Colors.blueGrey[800],
-              ),
-              onPressed: () => Navigator.of(context).popAndPushNamed('/'),
-            ),
-          ),
           // Expanded(
           //   child: IconButton(
-          //     icon: Icon(Icons.compare_arrows_outlined,
-          //         color: Colors.blueGrey[800]),
-          //     onPressed: () => Navigator.of(context).pushNamed('/compara'),
+          //     icon: Icon(
+          //       FontAwesomeIcons.newspaper,
+          //       color: Colors.blueGrey[800],
+          //     ),
+          //     onPressed: () => Navigator.of(context).popAndPushNamed('/'),
           //   ),
           // ),
+          Expanded(
+            child: IconButton(
+              icon: Icon(Icons.compare_arrows_outlined,
+                  color: Colors.blueGrey[800]),
+              onPressed: () => Navigator.of(context).pushNamed('/compara'),
+            ),
+          ),
           Expanded(
             child: IconButton(
               icon: Icon(
@@ -41,15 +40,31 @@ class MenuBottom extends StatelessWidget {
           //     onPressed: () => Navigator.of(context).pushNamed(ROTAS.FAVORITOS),
           //   ),
           // ),
+          // 
+          
+          //  Expanded(
+          //   child: IconButton(
+          //     icon:
+          //         Icon(Icons.person, 
+          //         size: 30, color: Colors.blueGrey[800]),
+          //     onPressed: () {
+          //        Navigator.of(context).pushNamed(ROTAS.PERFIL);
+          //       Scaffold.of(context).openDrawer();
+          //     },
+          //   ),
+          // ), 
+          
           Expanded(
             child: IconButton(
               icon:
                   Icon(Icons.more_horiz, size: 30, color: Colors.blueGrey[800]),
               onPressed: () {
+               
                 Scaffold.of(context).openEndDrawer();
               },
             ),
           ),
+         
         ],
       ),
     );
