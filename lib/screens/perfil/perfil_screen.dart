@@ -192,7 +192,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                                             searchBoxDecoration: InputDecoration(suffixIcon: Icon(Icons.search), hintText: 'Buscar Scooter Clube'),
                                             mode: Mode.BOTTOM_SHEET,
                                             itemAsString: (ClubeMODEL clube) => clube.clube,
-                                            selectedItem: user['clube'] == null ? ClubeMODEL(clube: 'Faça parte de um clube') : ClubeMODEL(clube: '${user['clube']}'),
+                                            selectedItem: user['clube'] == null ? ClubeMODEL(clube: 'Faça parte de um clube!') : ClubeMODEL(clube: '${user['clube']}'),
                                             popupItemBuilder: _customPopupItemBuilderExample,
                                             onFind: (String filter) async {
                                               final Firestore _db = Firestore.instance;

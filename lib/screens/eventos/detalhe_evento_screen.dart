@@ -239,10 +239,12 @@ class _DetalheEventoState extends State<DetalheEvento> {
                         return ListView.builder(
                           itemCount: snap.length,
                           itemBuilder: (context, i) {
+                           
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(snap[i]['nome']),
+                                Text( snap[i]['nome'] ?? ''),
+                                //Text(snap[i]['dataInscricao'] ?? '',style: TextStyle(color: Colors.grey[700]),),
                                 Divider(height: 8, color: Colors.white60,),
                               ],
                             );
@@ -267,13 +269,13 @@ class _DetalheEventoState extends State<DetalheEvento> {
               children: [
                 Expanded(
                   child: Container(
-                    color: Colors.lightGreen,
+                    color: eventoModalRoute.dataEvento.isAfter(DateTime.now()) ? Colors.lightGreen : Colors.redAccent,
                     child: TextButton(
                       child: eventoModalRoute.dataEvento.isAfter(DateTime.now())
                           ? Text('Inscreve-me',
                               style: TextStyle(color: Colors.white))
                           : Text('Fim das incrições',
-                              style: TextStyle(color: Colors.red)),
+                              style: TextStyle(color: Colors.white)),
                       onPressed:
                           eventoModalRoute.dataEvento.isAfter(DateTime.now())
                               ? () async {

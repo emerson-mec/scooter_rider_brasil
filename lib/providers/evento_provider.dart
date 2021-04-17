@@ -9,14 +9,18 @@ class EventoProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Stream<List<EventoMODEL>> loadEvento() {
-    return _db.collection('evento')
-      .snapshots()
-      .map((snapshot) =>
+    return _db.collection('evento').snapshots().map((snapshot) =>
         snapshot.documents.map((doc) => EventoMODEL.daAPI(doc.data)).toList());
   }
 
   Future<void> addEvento(EventoMODEL evento) async {
     final FirebaseUser currentUser = await _auth.currentUser();
+    
+    var user = await _db
+        .collection('users')
+        .document(currentUser.uid)
+        .get()
+        .then((value) => value);
 
     await _db.collection('evento').add(evento.paraJson()).then((value) {
       //quando terminar os passos acima, retorne o ID para salvar.
@@ -24,6 +28,7 @@ class EventoProvider with ChangeNotifier {
         'id': '${value.documentID}',
         'autor': '${currentUser.email}',
         'inscritos': {}, //precisa criar pra não quebrar
+        'idClube': '${user['idClube']}', 
       });
     });
   }
@@ -50,7 +55,6 @@ class EventoProvider with ChangeNotifier {
     await Firestore.instance.collection('evento').document(idEvento).setData({
       'inscritos': {
         "${currentUser.uid}": {
-          'email': '${user["email"]}',
           'nome': '${user["nome"]}',
           'id': '${user["id"]}',
         }
@@ -64,10 +68,7 @@ class EventoProvider with ChangeNotifier {
     var doc = Firestore.instance.collection('evento').document(idEvento);
 
     await doc.setData({
-       'inscritos': {
-        "${currentUser.uid}": FieldValue.delete()
-      }
-    },merge: true ).then((value) => print('value'));
-
+      'inscritos': {"${currentUser.uid}": FieldValue.delete()}
+    }, merge: true).then((value) => print('value'));
   }
 }
