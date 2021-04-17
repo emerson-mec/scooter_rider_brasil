@@ -9,11 +9,11 @@ class AuthProvider with ChangeNotifier {
 
   String estado  ;
 
-  Future<String> nomeUser() async {
+  Future<DocumentSnapshot> user() async {
     var uid = await _auth.currentUser().then((value) => value.uid);
-    var user = _colecao.collection('users').document(uid).get();
-    String nome = await user.then((value) => value['nome']);
-    return nome;
+
+     return _colecao.collection('users').document(uid).get();
+
   }
 
 

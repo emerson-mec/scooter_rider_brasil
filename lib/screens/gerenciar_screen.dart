@@ -6,6 +6,7 @@ import 'package:scooter_rider_brasil/components/evento/tile_gerenciado.dart';
 import 'package:scooter_rider_brasil/components/feed/tile_feed_gerenciado_tile.dart';
 import 'package:scooter_rider_brasil/models/evento_model.dart';
 import 'package:scooter_rider_brasil/models/feed_model.dart';
+import 'package:scooter_rider_brasil/providers/auth_provider.dart';
 import 'package:scooter_rider_brasil/providers/evento_provider.dart';
 import 'package:scooter_rider_brasil/providers/feed_provider.dart';
 import 'package:scooter_rider_brasil/utils/rotas.dart';
@@ -22,6 +23,7 @@ class _GerenciarScreenState extends State<GerenciarScreen> {
   Widget build(BuildContext context) {
     FeedProvider feedProvider = Provider.of<FeedProvider>(context);
     EventoProvider eventoProvider = Provider.of<EventoProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -37,8 +39,8 @@ class _GerenciarScreenState extends State<GerenciarScreen> {
             child: Text('Evento', style: TextStyle(fontSize: 10)),
           ),
           Switch(
-            focusColor: Colors.green,
             activeColor: Colors.white,
+           inactiveTrackColor: Colors.grey,
             onChanged: (bool value) {
               setState(() {
                 _filtro = value;
@@ -86,30 +88,19 @@ class _GerenciarScreenState extends State<GerenciarScreen> {
           ),
         ],
       ),
+      
       body: FutureBuilder(
-        future: FirebaseAuth.instance.currentUser(),
+        future: authProvider.user(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
 
-          final userId = snapshot.data.uid;
+          final snap = snapshot.data;
 
-          return StreamBuilder(
-            stream: Firestore.instance
-                .collection('users')
-                .document(userId)
-                .snapshots(),
-            builder: (BuildContext context,  AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
-
-              var estadoUser = snapshot.data['estado'];
-              
-              return _filtro
+          return  _filtro
               ? StreamBuilder(
-                  stream: feedProvider.loadFeed('EstadosFeed.$estadoUser'),
+                  stream: feedProvider.loadFeed('EstadosFeed.${snap['estado']}'),
                   builder: (ctx, AsyncSnapshot<List<FeedMODEL>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
@@ -127,7 +118,7 @@ class _GerenciarScreenState extends State<GerenciarScreen> {
                   },
                 )
               : StreamBuilder(
-                  stream: eventoProvider.loadEvento(),
+                  stream: eventoProvider.loadEvento(snap['idClube']),
                   builder: (ctx, AsyncSnapshot<List<EventoMODEL>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
@@ -144,8 +135,7 @@ class _GerenciarScreenState extends State<GerenciarScreen> {
                     );
                   },
                 );
-            },
-          );
+           
         },
       ),
     );

@@ -8,9 +8,13 @@ class EventoProvider with ChangeNotifier {
   Firestore _db = Firestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Stream<List<EventoMODEL>> loadEvento() {
-    return _db.collection('evento').snapshots().map((snapshot) =>
-        snapshot.documents.map((doc) => EventoMODEL.daAPI(doc.data)).toList());
+
+  Stream<List<EventoMODEL>> loadEvento(String idClubeDoUser) {
+    return _db.collection('evento')
+      .where('idClube', whereIn: ['$idClubeDoUser'])
+      .snapshots().map((snapshot) => snapshot.documents
+      .map((doc) => EventoMODEL.daAPI(doc.data))
+      .toList());
   }
 
   Future<void> addEvento(EventoMODEL evento) async {
