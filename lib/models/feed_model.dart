@@ -10,6 +10,7 @@ class FeedMODEL with ChangeNotifier {
   final TipoFeed tipoFeed;
   final DateTime dataPublicacao;
   final EstadosFeed estado;
+  final String autor;
   //int curtidas;
   //bool favorito;
   //bool like;
@@ -24,6 +25,7 @@ class FeedMODEL with ChangeNotifier {
     this.imagemPrincipal,
     this.dataPublicacao,
     this.estado = EstadosFeed.TODOS,
+    this.autor,
     //this.curtidas = 0,
     //this.favorito = false,
     //this.like = false,
@@ -41,6 +43,7 @@ class FeedMODEL with ChangeNotifier {
       'tipoFeed': tipoFeed.toString(),
       'dataPublicacao': dataPublicacao.toIso8601String(),
       'estado': estado.toString(),
+      'autor': autor,
       //'curtidas': curtidas,
       //'favorito': favorito,
       //'like': like,
@@ -68,6 +71,7 @@ class FeedMODEL with ChangeNotifier {
               feed['estado'] == 'EstadosFeed.SC' ? EstadosFeed.SC : 
               feed['estado'] == 'EstadosFeed.TODOS' ? EstadosFeed.TODOS : 
               null ,
+      autor: feed['autor'],
       //curtidas: feed['curtidas'] ,
       //favorito: feed['favorito'] ,
       //like: feed['like'] ,

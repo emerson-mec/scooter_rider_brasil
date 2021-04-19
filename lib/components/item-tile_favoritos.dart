@@ -20,7 +20,7 @@ class ItemFavoritos extends StatelessWidget {
         key: Key(item.titulo),
         onDismissed: (direction) {
          // itemRaw.favoritar(item);
-          Scaffold.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text("Item removido dos favoritos"),
               action: SnackBarAction(

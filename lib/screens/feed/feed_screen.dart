@@ -19,57 +19,35 @@ class _FeedScreenState extends State<FeedScreen> {
     FeedProvider feedProvider = Provider.of<FeedProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          actions: [Icon(Icons.menu, color: Color(0xFF161616))],
-          elevation: 10,
-          flexibleSpace: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset('assets/logo_srb.png', scale: 20),
-                  SizedBox(width: 7),
-                  Column(
-                    children: [
-                      Text(
-                        'Scooter Rider',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontFamily: 'Bookman',
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        'B r a s i l'.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 8,
-                          fontFamily: 'Bookman',
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        actions: [Icon(Icons.menu, color: Colors.white)],
+        elevation: 5,
+        backgroundColor: Colors.white,
+        title: Image.asset('assets/logo_srb3.png', scale: 3.2),
+        centerTitle: true,
+      ),
+
+      body: Container(
+        decoration: BoxDecoration(
+          color: Colors.red,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFFf3f5f7),
+              Color(0xFFd3dde7),
             ],
           ),
-          // backgroundColor: Theme.of(context).primaryColor,
-          // backgroundColor: Colors.black87,
         ),
-
-        body: FutureBuilder(
+        child: FutureBuilder(
           future: authProvider.estadoUser(),
           builder: (context, snapshot) {
-             if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
 
-            String estado =  snapshot.data;
+            String estado = snapshot.data;
 
             return StreamBuilder(
                 stream: feedProvider.loadFeed('EstadosFeed.$estado'),
@@ -84,25 +62,17 @@ class _FeedScreenState extends State<FeedScreen> {
                     itemCount: feedRAW.length,
                     reverse: false,
                     itemBuilder: (context, i) {
-                      return Column(
-                        children: [
-                          Container(
-                            color: Colors.white,
-                            child: CardFeedWIDGET(feedRAW[i]),
-                          ),
-                          SizedBox(height: 15),
-                        ],
-                      );
+                      return CardFeedWIDGET(feedRAW[i]);
                     },
                   );
                 });
           },
         ),
-        backgroundColor: Colors.grey[200],
-        bottomNavigationBar: MenuBottom(),
-        //drawer: MeuDrawer(),
-        endDrawer: MeuDrawer(),
       ),
+      backgroundColor: Colors.grey[200],
+      bottomNavigationBar: MenuBottom(),
+      //drawer: MeuDrawer(),
+      endDrawer: MeuDrawer(),
     );
   }
 }

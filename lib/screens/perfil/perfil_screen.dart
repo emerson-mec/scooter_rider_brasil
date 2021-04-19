@@ -14,7 +14,7 @@ class PerfilScreen extends StatefulWidget {
 class _PerfilScreenState extends State<PerfilScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final _openDropDownProgKey = GlobalKey<DropdownSearchState<String>>();
+  //final _openDropDownProgKey = GlobalKey<DropdownSearchState<String>>();
 
   TextEditingController textEditingController = TextEditingController();
 

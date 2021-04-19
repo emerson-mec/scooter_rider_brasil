@@ -73,6 +73,6 @@ class EventoProvider with ChangeNotifier {
 
     await doc.setData({
       'inscritos': {"${currentUser.uid}": FieldValue.delete()}
-    }, merge: true).then((value) => print('value'));
+    }, merge: true);
   }
 }

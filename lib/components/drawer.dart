@@ -11,7 +11,7 @@ class MeuDrawer extends StatelessWidget {
           leading: Icon(
             icon,
             color: Colors.orange[400],
-            size: 30,
+            size: 35,
           ),
           title: Text(
             titulo,
@@ -28,7 +28,7 @@ class MeuDrawer extends StatelessWidget {
           ),
           onTap: onTap,
         ),
-        Divider(height: 15, endIndent: 20, indent: 20, color: Colors.black38),
+        Divider(height: 15, endIndent: 30, indent: 30, color: Colors.blueGrey[300]),
       ],
     );
   }
@@ -56,7 +56,7 @@ class MeuDrawer extends StatelessWidget {
                     if (chatSnapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     }
-                    return Text("${chatSnapshot.data['nome']}",style: TextStyle(fontWeight: FontWeight.bold),);
+                    return Text("${chatSnapshot.data['nome']}",style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'RobotoCondensed'),);
                   },
                   
                 );
@@ -69,7 +69,7 @@ class MeuDrawer extends StatelessWidget {
                 if(snapshot.connectionState == ConnectionState.waiting){
                   return Text('carregando...');
                 }
-                return Text(snapshot.data.email, style: TextStyle(color: Colors.grey[500]));
+                return Text(snapshot.data.email, style: TextStyle(color: Colors.grey[500], fontFamily: 'RobotoCondensed'));
               },
             ),
 
@@ -110,7 +110,7 @@ class MeuDrawer extends StatelessWidget {
             ),
           ),
           Container(
-            height: 40,
+            height: 30,
             //color: Theme.of(context).primaryColor,
             child: Center(
               child: Text(

@@ -29,7 +29,7 @@ class IconFeedType extends StatelessWidget {
         return Stack(
           children: [
             CircleAvatar(
-              backgroundColor: Colors.green[400],
+              backgroundColor: Colors.green[300],
               child: Container(
                 height: 35,
                 child: Image.asset(
@@ -45,7 +45,7 @@ class IconFeedType extends StatelessWidget {
         return Stack(
           children: [
             CircleAvatar(
-              backgroundColor: Colors.red[400],
+              backgroundColor: Colors.red[300],
               child: Container(
                 height: 30,
                 child: Image.asset(
@@ -77,7 +77,7 @@ class IconFeedType extends StatelessWidget {
         return Stack(
           children: [
             CircleAvatar(
-              backgroundColor: Colors.pinkAccent,
+              backgroundColor: Colors.pinkAccent[100],
               child: Container(
                 height: 23,
                 child: Image.asset(

@@ -175,15 +175,15 @@ class _AuthFormState extends State<AuthForm> {
               ),
               SizedBox(height: 40),
               // ENTRAR OU CADASTRAR
-              RaisedButton(
-                elevation: 10,
-                padding: EdgeInsets.symmetric(vertical: 13),
-                color: _authData.isLogin ? Colors.black87 : Colors.green[500],
-                child: Text(
-                  _authData.isLogin ? 'Entrar' : 'Cadastrar',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
+              ElevatedButton(
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Text(
+                    _authData.isLogin ? 'Entrar' : 'Cadastrar',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                    ),
                   ),
                 ),
                 onPressed: _submit,
@@ -237,7 +237,7 @@ class MySelectionItem extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   title,
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
                 ),
               ),
               padding: EdgeInsets.all(10.0),

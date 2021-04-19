@@ -36,18 +36,12 @@ class MyApp extends StatelessWidget {
         title: 'Scooter Rider Brasil',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Color(0xFF161616),
           accentColor: Colors.yellow[800],
-          errorColor: Colors.red,
-          //scaffoldBackgroundColor: Colors.grey[200],
           buttonTheme: ButtonTheme.of(context).copyWith(
-            //buttonColor: Colors.black,
             textTheme: ButtonTextTheme.primary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           ),
-          //cor do menu
+          primaryColor: Colors.white,
           fontFamily: 'Bookman', //fonte padrão
           textTheme: ThemeData().textTheme.copyWith(
                 bodyText1: TextStyle(

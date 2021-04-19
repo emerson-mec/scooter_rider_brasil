@@ -113,14 +113,6 @@ class _TileEventoWidgetState extends State<TileEventoWidget> {
                         ),
                         SizedBox(height: 3),
                         Text(
-                          '${widget.item.subtitulo}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        Text(
                           'Dia ${widget.item.dataEventoAsFormat()}',
                           style: TextStyle(
                             fontWeight: FontWeight.w300,
@@ -139,7 +131,7 @@ class _TileEventoWidgetState extends State<TileEventoWidget> {
               ],
             ),
           ),
-          Divider(endIndent: 80, indent: 80),
+          Divider(endIndent: 20, indent: 20, color: Colors.blueGrey[300],),
         ],
       ),
     );
