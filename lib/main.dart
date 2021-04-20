@@ -68,9 +68,6 @@ class MyApp extends StatelessWidget {
         home: StreamBuilder(
             stream: FirebaseAuth.instance.onAuthStateChanged,
             builder: (ctx, userSnapshot) {
-              if(userSnapshot.connectionState == ConnectionState.waiting) {
-                return FeedScreen(); // gambiarra
-              }
               if (userSnapshot.hasData) {
                 return FeedScreen();
               } else {

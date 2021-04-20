@@ -48,7 +48,7 @@ class EventoProvider with ChangeNotifier {
     return _db.collection('evento').document(idEvento).delete();
   }
 
-  Future<void> inscreverSe(String idEvento) async {
+  Future<void> inscreverSe(String idEvento ,[String resposta, bool garupa, bool amigo]) async {
     FirebaseUser currentUser = await _auth.currentUser().then((value) => value);
     var user = await _db
         .collection('users')
@@ -61,6 +61,9 @@ class EventoProvider with ChangeNotifier {
         "${currentUser.uid}": {
           'nome': '${user["nome"]}',
           'id': '${user["id"]}',
+          'pontoEncontro' : resposta ?? '',
+          'garupa' : garupa,
+          'amigo' : amigo,
         }
       }
     }, merge: true);

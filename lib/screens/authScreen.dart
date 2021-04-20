@@ -37,6 +37,7 @@ class _AuthScreenState extends State<AuthScreen> {
           'estado': authData.estado.toString(),
           'email': authData.emailUser,
           'id': authResult.user.uid,
+          'tipoUser': 'comum',
         };
 
         await Firestore.instance

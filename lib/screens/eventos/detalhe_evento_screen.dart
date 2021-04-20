@@ -3,10 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:scooter_rider_brasil/components/evento/alert_inscricao_widget.dart';
+
 import 'package:scooter_rider_brasil/models/evento_model.dart';
 import 'package:scooter_rider_brasil/providers/evento_provider.dart';
 import 'package:scooter_rider_brasil/utils/constantes.dart';
-//SCREENS
 
 class DetalheEvento extends StatefulWidget {
   @override
@@ -18,18 +19,13 @@ class _DetalheEventoState extends State<DetalheEvento> {
 
   @override
   Widget build(BuildContext context) {
-    final eventoModalRoute =
-        ModalRoute.of(context).settings.arguments as EventoMODEL;
+    final eventoModalRoute = ModalRoute.of(context).settings.arguments as EventoMODEL;
     EventoProvider eventoProvider = Provider.of<EventoProvider>(context);
-
-    // // TAMANHOS
-    // var appBar = AppBar().preferredSize;
-    // var size = MediaQuery.of(context).size;
-    // //pega o tamanho vertical da tela e desconta a appBar mais o Pad do statusBar(relogio)
-    // var height = (size.height - appBar.height) - MediaQuery.of(context).padding.top;
 
     //quanto tempo falta para o evento
     Duration falta = eventoModalRoute.dataEvento.difference(DateTime.now());
+
+   
 
     return Scaffold(
       appBar: AppBar(
@@ -106,9 +102,7 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                 if (eventoModalRoute.dataEvento
                                     .isAfter(DateTime.now()))
                                   Text(
-                                    'a partir das: ' +
-                                        DateFormat('hh:mm').format(
-                                            eventoModalRoute.dataEvento),
+                                    'a partir das: ' + DateFormat('hh:mm').format(eventoModalRoute.dataEvento),
                                     textAlign: TextAlign.end,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
@@ -144,7 +138,7 @@ class _DetalheEventoState extends State<DetalheEvento> {
                       alignment: Alignment.centerLeft,
                       width: double.infinity,
                       height: 40,
-                      color:   Colors.blue[400],
+                      color: Colors.blue[400],
                       child: Text(
                         '   Evento',
                         style: TextStyle(
@@ -155,7 +149,8 @@ class _DetalheEventoState extends State<DetalheEvento> {
                     ),
 
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16,vertical: 30),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 30),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,18 +176,30 @@ class _DetalheEventoState extends State<DetalheEvento> {
                               fontStyle: FontStyle.italic,
                             ),
                           ),
-                         
-                           
-                          Divider(endIndent: 20, indent: 20,color: Colors.blueGrey[300], height: 40,),
 
-                           Row(
-                              children: [
-                                Image.network('https://avatars.githubusercontent.com/u/57400937?v=4',scale: 15.0,),
-                                Text(' By Emerson Oliveira',style: TextStyle(color: Colors.blue[800], fontWeight: FontWeight.w400,),)
-                              ],
-                            ),
+                          Divider(
+                            endIndent: 20,
+                            indent: 20,
+                            color: Colors.blueGrey[300],
+                            height: 40,
+                          ),
 
-                          
+                          Row(
+                            children: [
+                              Image.network(
+                                'https://avatars.githubusercontent.com/u/57400937?v=4',
+                                scale: 15.0,
+                              ),
+                              Text(
+                                ' By Emerson Oliveira',
+                                style: TextStyle(
+                                  color: Colors.blue[800],
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              )
+                            ],
+                          ),
+
                           //DETALHE
                           Column(
                             children: [
@@ -208,7 +215,12 @@ class _DetalheEventoState extends State<DetalheEvento> {
                             ],
                           ),
 
-                          Divider(endIndent: 20, indent: 20,color: Colors.blueGrey[300],height: 60,),
+                          Divider(
+                            endIndent: 20,
+                            indent: 20,
+                            color: Colors.blueGrey[300],
+                            height: 60,
+                          ),
                           //LISTA DE PRESENÇA TITULO
                           Text(
                             'Lista de presença'.toUpperCase(),
@@ -226,12 +238,18 @@ class _DetalheEventoState extends State<DetalheEvento> {
                             height: 200,
                             child: StreamBuilder(
                               initialData: Text('Carregando'),
-                              stream: Firestore.instance.collection('evento').document(eventoModalRoute.id).snapshots(),
-                              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
+                              stream: Firestore.instance
+                                  .collection('evento')
+                                  .document(eventoModalRoute.id)
+                                  .snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
                                   return Center(
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         CircularProgressIndicator(),
                                         SizedBox(height: 10),
@@ -241,7 +259,8 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                   );
                                 }
 
-                                List snap = snapshot.data['inscritos'].values.toList();
+                                List snap =
+                                    snapshot.data['inscritos'].values.toList();
 
                                 return Column(
                                   children: [
@@ -252,24 +271,36 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                         itemCount: snap.length,
                                         itemBuilder: (context, i) {
                                           return Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                snap[i]['nome'] ?? '',
-                                                style: TextStyle( color: Colors.blueGrey[700]),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(snap[i]['nome'] ?? '', style: TextStyle(color:Colors.blueGrey[700]),),
+                                                      Text(snap[i]['pontoEncontro'] ?? '', style: TextStyle(color:Colors.blueGrey[700]),),
+                                                    ],
+                                                  ),
+                                                  Text(snap[i]['garupa'].toString() ?? '', style: TextStyle(color:Colors.blueGrey[700]),),
+                                                  Text(snap[i]['amigo'].toString() ?? '', style: TextStyle(color:Colors.blueGrey[700]),),
+                                                ],
                                               ),
-                                              Divider(height: 8,color: Colors.black45),
+                                              Divider(
+                                                  height: 8,
+                                                  color: Colors.black45),
                                             ],
                                           );
                                         },
                                       ),
                                     ),
                                     Container(
-                                        child: Text(
-                                      '${snap.length} inscritos',
-                                      style: TextStyle(
-                                          color: Colors.blueGrey[300]),
-                                    )),
+                                      child: Text('${snap.length} inscritos',
+                                          style: TextStyle(
+                                              color: Colors.blueGrey[300])),
+                                    ),
                                   ],
                                 );
                               },
@@ -299,14 +330,15 @@ class _DetalheEventoState extends State<DetalheEvento> {
                       child: TextButton(
                         child:
                             eventoModalRoute.dataEvento.isAfter(DateTime.now())
-                                ? Text('Inscreve-me',
-                                    style: TextStyle(color: Colors.white))
-                                : Text('Fim das incrições',
-                                    style: TextStyle(color: Colors.white)),
-                        onPressed: eventoModalRoute.dataEvento
-                                .isAfter(DateTime.now())
-                            ? () async {
-                                eventoProvider.inscreverSe(eventoModalRoute.id);
+                                ? Text('Inscreve-me',style: TextStyle(color: Colors.white))
+                                : Text('Fim das incrições', style: TextStyle(color: Colors.white)),
+                        onPressed: eventoModalRoute.dataEvento .isAfter(DateTime.now()) ? () async {
+                              
+                                showDialog(
+                                  context: context, 
+                                  builder: (context) => AlertInscricao(eventoModalRoute: eventoModalRoute, eventoProvider: eventoProvider),
+                                );
+                                
 
                                 setState(() {
                                   mostrarCancelar = true;
@@ -324,11 +356,9 @@ class _DetalheEventoState extends State<DetalheEvento> {
                               color: Colors.redAccent,
                               child: TextButton(
                                 onPressed: () {
-                                  eventoProvider
-                                      .removerInscricao(eventoModalRoute.id);
+                                  eventoProvider.removerInscricao(eventoModalRoute.id);
                                 },
-                                child: Text('Cancelar inscrição',
-                                    style: TextStyle(color: Colors.white)),
+                                child: Text('Cancelar inscrição', style: TextStyle(color: Colors.white)),
                               ),
                             ),
                           )
@@ -342,3 +372,12 @@ class _DetalheEventoState extends State<DetalheEvento> {
     );
   }
 }
+
+
+
+
+
+
+
+
+ 

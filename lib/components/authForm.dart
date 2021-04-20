@@ -199,7 +199,7 @@ class _AuthFormState extends State<AuthForm> {
                   child: Text(
                     _authData.isLogin
                       ? 'Criar uma nova conta?'
-                      : 'Já tenho uma contar',style: TextStyle(fontSize: 18, color: Colors.black87, fontWeight: FontWeight.w400),),
+                      : 'Já tenho uma conta',style: TextStyle(fontSize: 18, color: Colors.black87, fontWeight: FontWeight.w400),),
                   onPressed: () {
                     widget.mostrarLogo(false);
 

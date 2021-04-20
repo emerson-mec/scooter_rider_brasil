@@ -14,8 +14,11 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
+
+
   @override
   Widget build(BuildContext context) {
+    
     FeedProvider feedProvider = Provider.of<FeedProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 

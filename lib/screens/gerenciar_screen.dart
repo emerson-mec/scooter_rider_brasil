@@ -15,7 +15,7 @@ class GerenciarScreen extends StatefulWidget {
 }
 
 class _GerenciarScreenState extends State<GerenciarScreen> {
-  bool _filtro = true;
+  bool _filtro = false;
 
   @override
   Widget build(BuildContext context) {
