@@ -186,17 +186,12 @@ class _DetalheEventoState extends State<DetalheEvento> {
 
                           Row(
                             children: [
-                              Image.network(
-                                'https://avatars.githubusercontent.com/u/57400937?v=4',
-                                scale: 15.0,
-                              ),
-                              Text(
-                                ' By Emerson Oliveira',
-                                style: TextStyle(
+                              Image.network( 'https://avatars.githubusercontent.com/u/57400937?v=4',scale: 15.0),
+                              Text(' By Emerson Oliveira', style: TextStyle(
                                   color: Colors.blue[800],
                                   fontWeight: FontWeight.w400,
                                 ),
-                              )
+                              ),
                             ],
                           ),
 
@@ -235,17 +230,12 @@ class _DetalheEventoState extends State<DetalheEvento> {
                           //INSCRITOS NA LISTA DE PRESENÇA
                           Container(
                             color: Colors.blueGrey[100],
-                            height: 200,
+                            height: 250,
                             child: StreamBuilder(
                               initialData: Text('Carregando'),
-                              stream: Firestore.instance
-                                  .collection('evento')
-                                  .document(eventoModalRoute.id)
-                                  .snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
+                              stream: Firestore.instance.collection('evento').document(eventoModalRoute.id).snapshots(),
+                              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
                                   return Center(
                                     child: Column(
                                       mainAxisAlignment:
@@ -259,33 +249,49 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                   );
                                 }
 
-                                List snap =
-                                    snapshot.data['inscritos'].values.toList();
+                                //print(snapshot.data['inscritos']['m2p0BmXZUoSRVOnxRa2Vwgoy3v82'] != true);
+
+                                List snap =snapshot.data['inscritos'].values.toList();
 
                                 return Column(
                                   children: [
                                     Container(
+                                      color: Colors.blueGrey[500],
+                                      padding: EdgeInsets.all(8),
+                                      child: Row(
+                                        children: [
+                                          Expanded(flex: 11, child: Text(' Nome',style: TextStyle(color: Colors.white))),
+                                          Container(width: 51, child: Text('Com\ngarupa?',textAlign: TextAlign.center,style: TextStyle(color: Colors.white))),
+                                          VerticalDivider(),
+                                          Container(width: 59, child: Text('Convidou\nalguém?',textAlign: TextAlign.center, style: TextStyle(color: Colors.white))),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
                                       padding: EdgeInsets.all(10),
-                                      height: 170,
+                                      height: 173,
                                       child: ListView.builder(
                                         itemCount: snap.length,
                                         itemBuilder: (context, i) {
+
                                           return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(snap[i]['nome'] ?? '', style: TextStyle(color:Colors.blueGrey[700]),),
-                                                      Text(snap[i]['pontoEncontro'] ?? '', style: TextStyle(color:Colors.blueGrey[700]),),
-                                                    ],
+                                                  Expanded(
+                                                    flex: 11,
+                                                      child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(snap[i]['nome'] ?? '', style: TextStyle(color:Colors.blueGrey[800],fontWeight: FontWeight.w500),),
+                                                        Text(snap[i]['pontoEncontro'] ?? '', style: TextStyle(color:Colors.grey[500],fontWeight: FontWeight.w400),),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  Text(snap[i]['garupa'].toString() ?? '', style: TextStyle(color:Colors.blueGrey[700]),),
-                                                  Text(snap[i]['amigo'].toString() ?? '', style: TextStyle(color:Colors.blueGrey[700]),),
+                                                  Container(width: 60, child: Text(snap[i]['garupa'] ? '  Sim' : '', style: TextStyle(color:Colors.blueGrey[700],),)),
+                                                  Container(width: 60, child: Text(snap[i]['amigo'] ? '      Sim' : '', style: TextStyle(color:Colors.blueGrey[700]),)),
                                                 ],
                                               ),
                                               Divider(
@@ -296,11 +302,7 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                         },
                                       ),
                                     ),
-                                    Container(
-                                      child: Text('${snap.length} inscritos',
-                                          style: TextStyle(
-                                              color: Colors.blueGrey[300])),
-                                    ),
+                                    Container(child: Text('${snap.length} inscritos',style: TextStyle(color: Colors.blueGrey[300]))),
                                   ],
                                 );
                               },
@@ -328,21 +330,19 @@ class _DetalheEventoState extends State<DetalheEvento> {
                           ? Colors.lightGreen
                           : Colors.redAccent,
                       child: TextButton(
-                        child:
-                            eventoModalRoute.dataEvento.isAfter(DateTime.now())
+                        child: eventoModalRoute.dataEvento.isAfter(DateTime.now())
                                 ? Text('Inscreve-me',style: TextStyle(color: Colors.white))
                                 : Text('Fim das incrições', style: TextStyle(color: Colors.white)),
+                        
                         onPressed: eventoModalRoute.dataEvento .isAfter(DateTime.now()) ? () async {
                               
                                 showDialog(
                                   context: context, 
                                   builder: (context) => AlertInscricao(eventoModalRoute: eventoModalRoute, eventoProvider: eventoProvider),
                                 );
-                                
+                               
 
-                                setState(() {
-                                  mostrarCancelar = true;
-                                });
+                                
                               }
                             : null,
                       ),
