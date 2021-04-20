@@ -14,11 +14,8 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-
-
   @override
   Widget build(BuildContext context) {
-    
     FeedProvider feedProvider = Provider.of<FeedProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
@@ -53,22 +50,23 @@ class _FeedScreenState extends State<FeedScreen> {
             String estado = snapshot.data;
 
             return StreamBuilder(
-                stream: feedProvider.loadFeed('EstadosFeed.$estado'),
-                builder: (ctx, AsyncSnapshot<List<FeedMODEL>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
+              stream: feedProvider.loadFeed('EstadosFeed.$estado'),
+              builder: (ctx, AsyncSnapshot<List<FeedMODEL>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
 
-                  List<FeedMODEL> feedRAW = snapshot.data;
+                List<FeedMODEL> feedRAW = snapshot.data;
 
-                  return ListView.builder(
-                    itemCount: feedRAW.length,
-                    reverse: false,
-                    itemBuilder: (context, i) {
-                      return CardFeedWIDGET(feedRAW[i]);
-                    },
-                  );
-                });
+                return ListView.builder(
+                  itemCount: feedRAW.length,
+                  reverse: false,
+                  itemBuilder: (context, i) {
+                    return CardFeedWIDGET(feedRAW[i]);
+                  },
+                );
+              },
+            );
           },
         ),
       ),

@@ -136,9 +136,12 @@ class _CardFeedWIDGETState extends State<CardFeedWIDGET> {
                   SizedBox(width: 60),
                   Column(
                     children: [
-                      Text('${widget.item.estadoFeedAsText}'),
+                      Text('${widget.item.estadoFeedAsText}',style: TextStyle(color: Colors.grey[300]),),
                     ],
                   ),
+                  Spacer(),
+                  Icon(Icons.bookmark, color: Colors.blueGrey[300],),
+                  SizedBox(width: 20),
                 ],
               ),
               // IMAGEM
@@ -162,8 +165,7 @@ class _CardFeedWIDGETState extends State<CardFeedWIDGET> {
                       return Center(
                         child: CircularProgressIndicator(
                           value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes
+                              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
                               : null,
                         ),
                       );
@@ -227,6 +229,7 @@ class _CardFeedWIDGETState extends State<CardFeedWIDGET> {
                               color: Colors.blueGrey[300],
                               fontWeight: FontWeight.w600),
                         ),
+                      
                       ],
                     ),
                   ),
