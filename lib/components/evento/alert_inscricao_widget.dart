@@ -27,69 +27,86 @@ class _AlertInscricaoState extends State<AlertInscricao> {
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
-    return FutureBuilder(
-      future: authProvider.user(),
-      builder: (context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: LinearProgressIndicator());
-        }
-
-        String avatar =  snapshot.data['urlAvatar'];
-
-        return AlertDialog(
-          title: Center(child: Text('INSCRIÇÕES',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueGrey[800]))),
-          content: Container(
-            height: 180,
-            child: Column(
+    return AlertDialog(
+      title: Center(
+          child: Text('INSCRIÇÕES',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.blueGrey[800]))),
+      content: Container(
+        height: 180,
+        child: Column(
+          children: [
+            TextField(
+              controller: controller,
+              maxLength: 15,
+              decoration: InputDecoration(
+                hintText: 'Qual ponto de encontro?',
+              ),
+            ),
+            Row(
               children: [
-                TextField(
-                  controller: controller,
-                  maxLength: 15,
-                  decoration: InputDecoration(
-                    hintText: 'Qual ponto de encontro?',
-                  ),
-                ),
-                Row(
-                  children: [
-                    Checkbox(
-                        checkColor: Colors.black87,
-                        value: garupa,
-                        onChanged: (value) {
-                          setState(() {
-                            garupa = value;
-                          });
-                        }),
-                    Text('Vou com garupa',
-                        style: TextStyle(color: Colors.blueGrey[700])),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Checkbox(
-                        checkColor: Colors.black87,
-                        value: amigo,
-                        onChanged: (value) {
-                          setState(() {
-                            amigo = value;
-                          });
-                        }),
-                    Text('Convidei um amigo',
-                        style: TextStyle(color: Colors.blueGrey[700])),
-                  ],
-                ),
+                Checkbox(
+                    checkColor: Colors.black87,
+                    value: garupa,
+                    onChanged: (value) {
+                      setState(() {
+                        garupa = value;
+                      });
+                    }),
+                Text('Vou com garupa',
+                    style: TextStyle(color: Colors.blueGrey[700])),
               ],
             ),
-          ),
-          actions: [
-            TextButton(
-              child: Text(
-                'Cancelar',
-                style: TextStyle(
-                    color: Colors.redAccent, fontWeight: FontWeight.w400),
-              ),
-              onPressed: () => Navigator.of(context).pop(false),
+            Row(
+              children: [
+                Checkbox(
+                    checkColor: Colors.black87,
+                    value: amigo,
+                    onChanged: (value) {
+                      setState(() {
+                        amigo = value;
+                      });
+                    }),
+                Text('Convidei um amigo',
+                    style: TextStyle(color: Colors.blueGrey[700])),
+              ],
             ),
-            TextButton(
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          child: Text(
+            'Cancelar',
+            style:
+                TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w400),
+          ),
+          onPressed: () => Navigator.of(context).pop(false),
+        ),
+        FutureBuilder(
+          future: authProvider.user(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: TextButton(
+                  onPressed: null,
+                  child: Container(
+                    color: Colors.grey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        'Confirmar',
+                        style: TextStyle(color: Colors.black45),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            String avatar = snapshot.data['urlAvatar'];
+
+            return TextButton(
               onPressed: () async {
                 await widget.eventoProvider.inscreverSe(
                   widget.eventoModalRoute.id,
@@ -109,10 +126,10 @@ class _AlertInscricaoState extends State<AlertInscricao> {
                       style: TextStyle(color: Colors.white),
                     ),
                   )),
-            ),
-          ],
-        );
-      },
+            );
+          },
+        ),
+      ],
     );
   }
 }
