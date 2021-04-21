@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scooter_rider_brasil/models/clube_model.dart';
 import 'package:scooter_rider_brasil/providers/clube_provider.dart';
+import 'package:scooter_rider_brasil/utils/constantes.dart';
 
 class PerfilScreen extends StatefulWidget {
   @override
@@ -44,15 +45,13 @@ class _PerfilScreenState extends State<PerfilScreen> {
               final userId = snapshot.data.uid;
 
               return StreamBuilder(
-                stream: Firestore.instance
-                    .collection('users')
-                    .document(userId)
-                    .snapshots(),
+                stream: Firestore.instance.collection('users').document(userId).snapshots(),
                 builder: (ctx, AsyncSnapshot<DocumentSnapshot> chatSnapshot) {
                   if (chatSnapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
                   }
                   final user = chatSnapshot.data;
+                  final urlAvatar = chatSnapshot.data['urlAvatar'];
 
                   return Form(
                     key: _formKey,
@@ -62,8 +61,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                         CircleAvatar(
                           maxRadius: 100,
                           backgroundColor: Colors.grey[200],
-                          backgroundImage: NetworkImage(
-                              'https://www.leadsdeconsorcio.com.br/blog/wp-content/uploads/2019/11/25.jpg'),
+                          backgroundImage: urlAvatar != null ? NetworkImage(urlAvatar) : AssetImage(Constantes.SEM_AVATAR) 
                         ),
                        
                         SizedBox(height: 15),

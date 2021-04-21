@@ -286,7 +286,7 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                                     child: CircleAvatar(
                                                       backgroundColor: Colors.grey,
                                                       maxRadius: 13,
-                                                      backgroundImage: urlAvatar != null ? NetworkImage(urlAvatar) : NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgUNaoFwOOa3sOnMoc8CVUJ65bhS822etxVQ&usqp=CAU'),
+                                                      backgroundImage: urlAvatar != null ? NetworkImage(urlAvatar) : AssetImage(Constantes.SEM_AVATAR),
                                                     ),
                                                   ),
                                                   Expanded(

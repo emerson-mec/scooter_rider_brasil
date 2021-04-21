@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scooter_rider_brasil/providers/auth_provider.dart';
+import 'package:scooter_rider_brasil/utils/constantes.dart';
 import 'package:scooter_rider_brasil/utils/rotas.dart';
 
 class MeuDrawer extends StatelessWidget {
@@ -35,11 +38,32 @@ class MeuDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    
     return Drawer( 
       child: Column(
         children: [
           UserAccountsDrawerHeader(
-            currentAccountPicture: Image.asset('assets/logo_srb.png'),
+            //currentAccountPicture: CircleAvatar(backgroundColor: Colors.grey,),
+            currentAccountPicture: 
+            FutureBuilder(
+              future: authProvider.user(),
+              builder: (context,   snapshot) {
+                
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  return CircleAvatar(backgroundColor: Colors.grey);
+                }
+                
+               
+                String urlAvatar = snapshot.data['urlAvatar'].toString();
+
+                return CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  backgroundImage: urlAvatar != null ? NetworkImage(urlAvatar) : AssetImage(Constantes.SEM_AVATAR) 
+                );
+
+              },
+            ),
             accountName: FutureBuilder(
               future: FirebaseAuth.instance.currentUser(),
               builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
