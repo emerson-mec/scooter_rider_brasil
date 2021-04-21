@@ -48,7 +48,7 @@ class EventoProvider with ChangeNotifier {
     return _db.collection('evento').document(idEvento).delete();
   }
 
-  Future<void> inscreverSe(String idEvento ,[String resposta, bool garupa, bool amigo]) async {
+  Future<void> inscreverSe(String idEvento , String urlAvatar, [String resposta, bool garupa, bool amigo]) async {
     FirebaseUser currentUser = await _auth.currentUser().then((value) => value);
     var user = await _db
         .collection('users')
@@ -64,6 +64,8 @@ class EventoProvider with ChangeNotifier {
           'pontoEncontro' : resposta ?? '',
           'garupa' : garupa,
           'amigo' : amigo,
+          'urlAvatar' : urlAvatar,
+          'dataInscricao' : Timestamp.now(),
         }
       }
     }, merge: true);

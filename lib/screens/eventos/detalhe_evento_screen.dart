@@ -273,6 +273,7 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                       child: ListView.builder(
                                         itemCount: snap.length,
                                         itemBuilder: (context, i) {
+                                         String urlAvatar = snap[i]['urlAvatar'];
 
                                           return Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,11 +282,11 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   Padding(
-                                                    padding: const EdgeInsets.all(8.0),
+                                                    padding: const EdgeInsets.only(left: 2,right: 8,bottom: 5,top: 5),
                                                     child: CircleAvatar(
                                                       backgroundColor: Colors.grey,
                                                       maxRadius: 13,
-                                                      backgroundImage: NetworkImage('https://www.leadsdeconsorcio.com.br/blog/wp-content/uploads/2019/11/25.jpg'),
+                                                      backgroundImage: urlAvatar != null ? NetworkImage(urlAvatar) : NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgUNaoFwOOa3sOnMoc8CVUJ65bhS822etxVQ&usqp=CAU'),
                                                     ),
                                                   ),
                                                   Expanded(
