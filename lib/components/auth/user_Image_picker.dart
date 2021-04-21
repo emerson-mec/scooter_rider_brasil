@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserImagePicker extends StatefulWidget {
-
   final Function(File pickedImage) onImagePicker;
 
   UserImagePicker(this.onImagePicker);
@@ -13,14 +12,18 @@ class UserImagePicker extends StatefulWidget {
 }
 
 class _UserImagePickerState extends State<UserImagePicker> {
-
   File _pickerImageFile;
 
-  Future<void> _pickImage() async{
+  Future<void> _pickImage() async {
     final picker = ImagePicker();
 
-    final pickerImage = await picker.getImage(source: ImageSource.camera); //pega da CAMERA OU GALERIA (faça uma pergunta para o usuário escolher)
-  
+    //pega da CAMERA OU GALERIA (faça uma pergunta para o usuário escolher)
+    final pickerImage = await picker.getImage(
+      source: ImageSource.camera,
+      imageQuality: 70,
+      maxWidth: 160,
+    );
+
     setState(() {
       _pickerImageFile = File(pickerImage.path);
     });
@@ -35,7 +38,8 @@ class _UserImagePickerState extends State<UserImagePicker> {
         CircleAvatar(
           radius: 40,
           backgroundColor: Colors.grey,
-          backgroundImage: _pickerImageFile != null ? FileImage(_pickerImageFile) : null,
+          backgroundImage:
+              _pickerImageFile != null ? FileImage(_pickerImageFile) : null,
         ),
         TextButton.icon(
           onPressed: _pickImage,
