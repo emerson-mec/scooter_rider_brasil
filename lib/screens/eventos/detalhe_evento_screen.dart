@@ -280,6 +280,14 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: CircleAvatar(
+                                                      backgroundColor: Colors.grey,
+                                                      maxRadius: 13,
+                                                      backgroundImage: NetworkImage('https://www.leadsdeconsorcio.com.br/blog/wp-content/uploads/2019/11/25.jpg'),
+                                                    ),
+                                                  ),
                                                   Expanded(
                                                     flex: 11,
                                                       child: Column(
@@ -290,13 +298,16 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                                       ],
                                                     ),
                                                   ),
-                                                  Container(width: 60, child: Text(snap[i]['garupa'] ? '  Sim' : '', style: TextStyle(color:Colors.blueGrey[700],),)),
-                                                  Container(width: 60, child: Text(snap[i]['amigo'] ? '      Sim' : '', style: TextStyle(color:Colors.blueGrey[700]),)),
+                                                  Container(width: 60, child: 
+                                                    Text(snap[i]['garupa'].toString().contains('true') ? '   Sim' : '   Não',
+                                                   style: TextStyle(color:Colors.blueGrey[700],),)),
+
+                                                  Container(width: 60, child: 
+                                                    Text(snap[i]['amigo'].toString().contains('true') ? '     Sim' : '     Não',
+                                                  style: TextStyle(color:Colors.blueGrey[700]),)),
                                                 ],
                                               ),
-                                              Divider(
-                                                  height: 8,
-                                                  color: Colors.black45),
+                                              Divider(height: 8,color: Colors.black45),
                                             ],
                                           );
                                         },

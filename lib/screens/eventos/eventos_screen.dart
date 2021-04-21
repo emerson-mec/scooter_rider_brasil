@@ -4,6 +4,7 @@ import 'package:scooter_rider_brasil/components/evento/tile_eventos_widget.dart'
 import 'package:scooter_rider_brasil/models/evento_model.dart';
 import 'package:scooter_rider_brasil/providers/auth_provider.dart';
 import 'package:scooter_rider_brasil/providers/evento_provider.dart';
+import 'package:scooter_rider_brasil/utils/rotas.dart';
 //SCREENS
 
 class EventoScreen extends StatefulWidget {
@@ -53,7 +54,20 @@ class _EventoScreenState extends State<EventoScreen> {
 
                 List<EventoMODEL> evento = snapshot.data;
 
-                return evento.isEmpty ? Center(child: Text('Sem evento para o seu Clube')) :ListView.builder(
+                return evento.isEmpty ? Center(child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Esta mensagem está aparecendo pois:',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                    Text('- Você ainda não se cadastrou em um clube de seu estado.',textAlign: TextAlign.center),
+                    TextButton(
+                      onPressed: () { 
+                        Navigator.of(context).pushNamed(ROTAS.PERFIL);
+                       },
+                    child: Text('Clique aqui para se cadastrar'),
+                    ),
+                    Text('- ou talvez ainda não exista clube no seu estado.',textAlign: TextAlign.center),
+                  ],
+                )) :ListView.builder(
                   itemCount: evento.length,
                   reverse: false,
                   itemBuilder: (context, i) {
