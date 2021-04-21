@@ -1,3 +1,5 @@
+import 'dart:io';
+
 enum AuthMode {
   LOGIN, //logar
   SIGNUP, //inscrever-se
@@ -9,6 +11,7 @@ class AuthModel {
   String password;
   String estado;
   String clube;
+  File image;
   AuthMode _mode = AuthMode.LOGIN;
   
   bool get isSignup => _mode == AuthMode.SIGNUP;

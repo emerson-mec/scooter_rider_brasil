@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:direct_select/direct_select.dart';
+import 'package:scooter_rider_brasil/components/auth/user_Image_picker.dart';
 import 'package:scooter_rider_brasil/models/auth_model.dart';
 
 
@@ -37,6 +40,17 @@ class _AuthFormState extends State<AuthForm> {
     bool isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus(); // Fecha teclado
 
+    //VALIDAR SE USUÁRIO ESCOLHEU UMA FOTO
+    if (_authData.image == null && _authData.isSignup) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Precisamos da sua foto!'),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+      return;
+    }
+
     if (_authData.isLogin) {
       if (isValid) {
         //dados corretos
@@ -47,6 +61,11 @@ class _AuthFormState extends State<AuthForm> {
         widget.onSubmit(_authData);
       }
     }
+  }
+
+  //FOTO QUE VEM DE UserImagePicker (componente filho (UserImagePicker) passando pro pai(AuthForm))
+  void _handlePickedImage( File image){
+    _authData.image = image;
   }
 
   @override
@@ -74,6 +93,10 @@ class _AuthFormState extends State<AuthForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // IMAGEM PICKER
+              if (_authData.isSignup)
+              UserImagePicker(_handlePickedImage),
+              SizedBox(height: 10),
               //ESTADO
               if (_authData.isSignup)
                 Row(
