@@ -47,6 +47,7 @@ class _AuthScreenState extends State<AuthScreen> {
           'email': authData.emailUser,
           'id': authResult.user.uid,
           'urlAvatar': url,
+          'dataCadastro': Timestamp.now(),
           //'tipoUser': 'comum',
         };
 

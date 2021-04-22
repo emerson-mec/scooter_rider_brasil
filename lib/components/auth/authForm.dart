@@ -113,7 +113,7 @@ class _AuthFormState extends State<AuthForm> {
                       ),
                     ),
                     DirectSelect(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Colors.white,
                       itemExtent: 55.0,
                       selectedIndex: selectedIndex,
                       child: MySelectionItem(

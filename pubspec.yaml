@@ -48,7 +48,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/logo_srb.png"
+  image_path: "assets/image/launcher.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -77,11 +77,11 @@ flutter:
    - assets/image/review.png
    - assets/image/fimFeed.png
    - assets/logo_srb.png
-   - assets/logo_srb2.png
    - assets/logo_srb3.png
    - assets/image/background.jpg
    - assets/image/semAvatar.png
    - assets/image/estrada.gif
+   - assets/image/launcher.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

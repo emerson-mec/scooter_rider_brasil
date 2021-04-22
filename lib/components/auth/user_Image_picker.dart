@@ -17,14 +17,14 @@ class _UserImagePickerState extends State<UserImagePicker> {
   Future<void> _pickImage() async {
     final picker = ImagePicker();
 
-    showDialog(
+   await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Selecionar imagem de:'),
         actions: [
           TextButton.icon(
             onPressed: () async {
-              final pickerImage = await picker.getImage(
+              PickedFile pickerImage = await picker.getImage(
                 source: ImageSource.camera,
                 imageQuality: 80,
                 maxWidth: 300,
@@ -39,7 +39,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
           ),
           TextButton.icon(
             onPressed: () async {
-              final pickerImage = await picker.getImage(
+              PickedFile pickerImage = await picker.getImage(
                 source: ImageSource.gallery,
                 imageQuality: 80,
                 maxWidth: 300,
@@ -55,8 +55,8 @@ class _UserImagePickerState extends State<UserImagePicker> {
         ],
       ),
     );
-
     widget.onImagePicker(_pickerImageFile);
+    
   }
 
   @override

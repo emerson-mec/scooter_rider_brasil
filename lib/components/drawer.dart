@@ -46,7 +46,6 @@ class MeuDrawer extends StatelessWidget {
           UserAccountsDrawerHeader(
             decoration: BoxDecoration(
               image: DecorationImage(
-                // image: AssetImage('assets/image/estrada.gif'),
                 image: NetworkImage('https://media2.giphy.com/media/GUuG3hg2rIcMx2s7OS/200.gif'),
                 fit: BoxFit.fill,
               ),
@@ -54,15 +53,16 @@ class MeuDrawer extends StatelessWidget {
             currentAccountPicture: 
             FutureBuilder(
               future: authProvider.user(),
-              builder: (context,   snapshot) {
+              builder: (context, snapshot) {
                 
                 if(snapshot.connectionState == ConnectionState.waiting){
-                  return CircleAvatar(backgroundColor: Colors.grey);
+                  return CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    backgroundImage: AssetImage(Constantes.SEM_AVATAR),
+                  );
                 }
-                
                
                 String urlAvatar = snapshot.data['urlAvatar'];
-                print(urlAvatar);
 
                 return CircleAvatar(
                   backgroundColor: Colors.grey,
@@ -76,17 +76,18 @@ class MeuDrawer extends StatelessWidget {
               builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
                 
                 if(snapshot.connectionState == ConnectionState.waiting){
-                  return LinearProgressIndicator();
+                  return Center(child: Text('Carregando...'));
                 }
+
                 final userId = snapshot.data.uid;
                 final a = Firestore.instance.collection('users').document(userId).snapshots();
 
                 return StreamBuilder(
                   stream:  a, 
                   builder: (ctx, AsyncSnapshot<DocumentSnapshot> chatSnapshot) {
-                    if (chatSnapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
+                     if(chatSnapshot.connectionState == ConnectionState.waiting){
+                        return Center(child: Text('Carregando...'));
+                    } 
                     return Text("${chatSnapshot.data['nome']}",style: TextStyle(fontWeight: FontWeight.w700, fontFamily: 'RobotoCondensed',color: Colors.white),);
                   },
                   
