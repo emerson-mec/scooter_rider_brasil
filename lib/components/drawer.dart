@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scooter_rider_brasil/providers/auth_provider.dart';
 import 'package:scooter_rider_brasil/utils/constantes.dart';
@@ -44,7 +45,13 @@ class MeuDrawer extends StatelessWidget {
       child: Column(
         children: [
           UserAccountsDrawerHeader(
-            //currentAccountPicture: CircleAvatar(backgroundColor: Colors.grey,),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                // image: AssetImage('assets/image/estrada.gif'),
+                image: NetworkImage('https://media2.giphy.com/media/GUuG3hg2rIcMx2s7OS/200.gif'),
+                fit: BoxFit.fill,
+              ),
+            ), 
             currentAccountPicture: 
             FutureBuilder(
               future: authProvider.user(),
@@ -55,7 +62,8 @@ class MeuDrawer extends StatelessWidget {
                 }
                 
                
-                String urlAvatar = snapshot.data['urlAvatar'].toString();
+                String urlAvatar = snapshot.data['urlAvatar'];
+                print(urlAvatar);
 
                 return CircleAvatar(
                   backgroundColor: Colors.grey,
@@ -80,7 +88,7 @@ class MeuDrawer extends StatelessWidget {
                     if (chatSnapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     }
-                    return Text("${chatSnapshot.data['nome']}",style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'RobotoCondensed'),);
+                    return Text("${chatSnapshot.data['nome']}",style: TextStyle(fontWeight: FontWeight.w700, fontFamily: 'RobotoCondensed',color: Colors.white),);
                   },
                   
                 );
@@ -93,7 +101,7 @@ class MeuDrawer extends StatelessWidget {
                 if(snapshot.connectionState == ConnectionState.waiting){
                   return Text('carregando...');
                 }
-                return Text(snapshot.data.email, style: TextStyle(color: Colors.grey[500], fontFamily: 'RobotoCondensed'));
+                return Text(snapshot.data.email, style: TextStyle(color: Colors.grey[600], fontFamily: 'RobotoCondensed'));
               },
             ),
 

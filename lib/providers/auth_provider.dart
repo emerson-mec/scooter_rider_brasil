@@ -12,7 +12,7 @@ class AuthProvider with ChangeNotifier {
   Future<DocumentSnapshot> user() async {
     var uid = await _auth.currentUser().then((value) => value.uid);
 
-     return _colecao.collection('users').document(uid).get();
+     return await _colecao.collection('users').document(uid).get();
 
   }
 

@@ -147,14 +147,6 @@ class _AuthScreenState extends State<AuthScreen> {
                     child: Image.asset('assets/logo_srb3.png'),
                   ),
                 if (_isLogo) SizedBox(height: 43),
-                if (!_isLogo)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 30),
-                    child: Text(
-                      'Criar conta',
-                      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
-                    ),
-                  ),
                 Stack(
                   children: [
                     AuthForm(_submitForm, _mostraLogo),

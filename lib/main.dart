@@ -41,7 +41,10 @@ class MyApp extends StatelessWidget {
             textTheme: ButtonTextTheme.primary,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           ),
-          primaryColor: Colors.white,
+          primaryColor: Colors.blueGrey[200],
+          
+          //COR DO APP BAR
+          appBarTheme: AppBarTheme().copyWith(color: Colors.white),
           fontFamily: 'Bookman', //fonte padrão
           textTheme: ThemeData().textTheme.copyWith(
                 bodyText1: TextStyle(
