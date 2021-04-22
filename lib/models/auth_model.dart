@@ -11,6 +11,7 @@ class AuthModel {
   String password;
   String estado;
   String clube;
+  String urlAvatar;
   File image;
   AuthMode _mode = AuthMode.LOGIN;
   

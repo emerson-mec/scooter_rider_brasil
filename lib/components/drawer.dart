@@ -43,34 +43,41 @@ class MeuDrawer extends StatelessWidget {
             decoration: BoxDecoration(color: Colors.yellow[800]),
             currentAccountPicture: FutureBuilder(
               future: FirebaseAuth.instance.currentUser(),
-              builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+              builder: (context, AsyncSnapshot<FirebaseUser> currentUser) {
                 
-                if (snapshot.connectionState == ConnectionState.waiting) {
+                if (currentUser.connectionState == ConnectionState.waiting) {
                   return CircleAvatar(
                       backgroundColor: Colors.grey,
                       backgroundImage: AssetImage(Constantes.SEM_AVATAR),
                     );
                 }
 
-                var uid = snapshot.data.uid;
+                final uid = currentUser.data.uid;
 
                 return StreamBuilder(
                   stream: Firestore.instance.collection('users').document(uid).snapshots(),
                   builder: (context, AsyncSnapshot<DocumentSnapshot>snapshot) {
-                  
-                    if(snapshot.connectionState == ConnectionState.waiting){
+                   if(snapshot.connectionState == ConnectionState.waiting){
                       return CircleAvatar(
                         backgroundColor: Colors.grey,
                         backgroundImage: AssetImage(Constantes.SEM_AVATAR),
                       );
-                    }
-                  
-                    String urlAvatar = snapshot.data['urlAvatar'];
+                   }
 
-                    return CircleAvatar(
+                   try {
+                     final urlAvatar = snapshot.data.data['urlAvatar'];
+
+                      return CircleAvatar(
                       backgroundColor: Colors.grey,
                       backgroundImage: urlAvatar != null ? NetworkImage(urlAvatar) : AssetImage(Constantes.SEM_AVATAR) 
                     );
+                   } on NetworkImageLoadException  catch (e) {
+                     print(e.uri.toString());
+                      return CircleAvatar(
+                        backgroundColor: Colors.grey,
+                        backgroundImage: AssetImage(Constantes.SEM_AVATAR) 
+                      );
+                   }
 
                   },
                 );

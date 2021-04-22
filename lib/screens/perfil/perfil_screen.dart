@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scooter_rider_brasil/models/clube_model.dart';
 import 'package:scooter_rider_brasil/providers/clube_provider.dart';
 import 'package:scooter_rider_brasil/utils/constantes.dart';
-
-import '../authScreen.dart';
 
 class PerfilScreen extends StatefulWidget {
   @override
