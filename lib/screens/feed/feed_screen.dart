@@ -21,7 +21,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        actions: [Icon(Icons.menu, color: Colors.white)],
+        actions: [Icon(Icons.menu, color: Colors.white), ],
         elevation: 5,
         backgroundColor: Colors.white,
         title: Image.asset('assets/logo_srb3.png', scale: 3.2),

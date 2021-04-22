@@ -79,7 +79,6 @@ class MyApp extends StatelessWidget {
             },
           ),
         routes: {
-          //   ROTAS.AUTH_HOME: (context) => AuthOrHomeScreen(),
           ROTAS.COMPARA: (context) => ComparaScooter(),
           ROTAS.DETALHE_FEED: (context) => DetalheFeedSCREEN(),
           ROTAS.DETALHE_EVENTO: (context) => DetalheEvento(),

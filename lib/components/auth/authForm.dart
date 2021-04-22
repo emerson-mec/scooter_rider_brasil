@@ -24,7 +24,7 @@ class _AuthFormState extends State<AuthForm> {
 
   // MÉTODO SELECT ESTADO ///////////////////////////////
   final estados = const [
-    "Selecione seu estado*",
+    "Selecione seu estado",
     "RJ",
     "SP",
     "MG",

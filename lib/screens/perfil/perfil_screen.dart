@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scooter_rider_brasil/models/clube_model.dart';
 import 'package:scooter_rider_brasil/providers/clube_provider.dart';
 import 'package:scooter_rider_brasil/utils/constantes.dart';
+
+import '../authScreen.dart';
 
 class PerfilScreen extends StatefulWidget {
   @override
@@ -399,6 +402,54 @@ class _PerfilScreenState extends State<PerfilScreen> {
                               ],
                             ),
                           ),
+                          // TextButton(
+                          //   onPressed: () async { 
+                          //     try {
+                               
+                          //       var user = await FirebaseAuth.instance.currentUser();
+                                
+                          //       if (user != null) {
+
+                          //         showDialog(context: context, builder: (builder){
+                          //             return AlertDialog( 
+                          //               title: Text('EXCLUIR CONTA?'),
+                          //               actions: [
+                          //                 TextButton(onPressed: ()=> Navigator.of(context).pop(), child: Text('Cancelar', style: TextStyle(color: Colors.blue))),
+                          //                 TextButton(
+                          //                   child: Text('Excluir conta',style: TextStyle(color: Colors.redAccent)),
+                          //                   onPressed: () async {
+
+                          //                     // await FirebaseStorage.instance
+                          //                     //       .getReferenceFromUrl('https://firebasestorage.googleapis.com/v0/b/scooter-rider-brasil-6532a.appspot.com/o/user_images%2F1WW3EIXhrfTLFVnYI0gh0HoGecB2.jpg?alt=media&token=e17da926-79ed-42e8-9394-29174009e3a2')
+                          //                     //       .then((value) => value.delete());
+                                                   
+                                                  
+                          //                     await Firestore.instance.collection('users').document(userId).delete().then((value) async {
+                          //                         await user.delete().then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Conta excluida'),backgroundColor: Colors.green,)));
+                          //                     });
+
+                          //                     Navigator.of(context).pushAndRemoveUntil(
+                          //                       MaterialPageRoute(builder: (context) {
+                          //                         return AuthScreen();
+                          //                       }),
+                          //                     );
+
+                          //                 },
+                          //               ),
+                          //               ],
+                          //             );
+                          //           }
+                          //         );
+
+                          //       } 
+
+                          //     } catch (e) {
+                          //       print(e);
+                          //     }
+                          //   },
+
+                          //   child: Text('Excluir conta',style: TextStyle(color: Colors.redAccent)),
+                          // ),
                         ],
                       ),
                     );
