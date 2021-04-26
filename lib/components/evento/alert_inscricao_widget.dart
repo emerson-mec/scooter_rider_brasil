@@ -104,18 +104,15 @@ class _AlertInscricaoState extends State<AlertInscricao> {
               );
             }
 
-            String avatar = snapshot.data['urlAvatar'];
-
             return TextButton(
               onPressed: () async {
                 await widget.eventoProvider.inscreverSe(
                   widget.eventoModalRoute.id,
-                  avatar,
                   controller.text,
                   garupa,
                   amigo,
-                );
-                Navigator.of(context).pop(true);
+                ).whenComplete(() => Navigator.of(context).pop(true));
+               
               },
               child: Container(
                   color: Colors.green,
