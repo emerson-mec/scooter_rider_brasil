@@ -94,8 +94,18 @@ class _GerenciarScreenState extends State<GerenciarScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-
+      
           final snap = snapshot.data;
+
+
+          var idClube;
+
+          try {
+            setState(() {
+              idClube = snapshot.data['idClube'];
+            });
+          } catch (e) {
+          }
 
           return  _filtro
               ? StreamBuilder(
@@ -117,7 +127,7 @@ class _GerenciarScreenState extends State<GerenciarScreen> {
                   },
                 )
               : StreamBuilder(
-                  stream: eventoProvider.loadEvento(snap['idClube']),
+                  stream: eventoProvider.loadEvento(idClube),
                   builder: (ctx, AsyncSnapshot<List<EventoMODEL>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
