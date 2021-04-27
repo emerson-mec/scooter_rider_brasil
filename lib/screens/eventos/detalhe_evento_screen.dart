@@ -233,7 +233,7 @@ class _DetalheEventoState extends State<DetalheEvento> {
                             height: 250,
                             child: StreamBuilder(
                               initialData: Text('Carregando'),
-                              stream: Firestore.instance.collection('evento').document(eventoModalRoute.id).snapshots(),
+                              stream: FirebaseFirestore.instance.collection('evento').doc(eventoModalRoute.id).snapshots(),
                               builder: (BuildContext context, AsyncSnapshot snapshot) {
                                 if (snapshot.connectionState == ConnectionState.waiting) {
                                   return Center(

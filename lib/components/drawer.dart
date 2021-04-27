@@ -5,6 +5,10 @@ import 'package:scooter_rider_brasil/utils/constantes.dart';
 import 'package:scooter_rider_brasil/utils/rotas.dart';
 
 class MeuDrawer extends StatelessWidget {
+  final User _user;
+
+  MeuDrawer(this._user);
+
   Widget _createItem({IconData icon, String titulo, String subtitulo, Function onTap}) {
     return Column(
       children: [
@@ -41,21 +45,9 @@ class MeuDrawer extends StatelessWidget {
         children: [
           UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: Colors.yellow[800]),
-            currentAccountPicture: FutureBuilder(
-              future: FirebaseAuth.instance.currentUser(),
-              builder: (context, AsyncSnapshot<FirebaseUser> currentUser) {
-                
-                if (currentUser.connectionState == ConnectionState.waiting) {
-                  return CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      backgroundImage: AssetImage(Constantes.SEM_AVATAR),
-                    );
-                }
-
-                final uid = currentUser.data.uid;
-
-                return StreamBuilder(
-                  stream: Firestore.instance.collection('users').document(uid).snapshots(),
+            
+            currentAccountPicture: StreamBuilder(
+                  stream: FirebaseFirestore.instance.collection('users').doc(_user.uid).snapshots(),
                   builder: (context, AsyncSnapshot<DocumentSnapshot>snapshot) {
                    if(snapshot.connectionState == ConnectionState.waiting){
                       return CircleAvatar(
@@ -65,7 +57,7 @@ class MeuDrawer extends StatelessWidget {
                    }
 
                    try {
-                     final urlAvatar = snapshot.data.data['urlAvatar'];
+                     final urlAvatar = snapshot.data.get('urlAvatar');
 
                       return CircleAvatar(
                       backgroundColor: Colors.grey,
@@ -80,42 +72,18 @@ class MeuDrawer extends StatelessWidget {
                    }
 
                   },
-                );
-              }
             ),
-            accountName: FutureBuilder(
-              future: FirebaseAuth.instance.currentUser(),
-              builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-                
-                if(snapshot.connectionState == ConnectionState.waiting){
-                  return Center(child: Text('Carregando...'));
-                }
-
-                final userId = snapshot.data.uid;
-                final a = Firestore.instance.collection('users').document(userId).snapshots();
-
-                return StreamBuilder(
-                  stream:  a, 
+            accountName: StreamBuilder(
+                  stream: FirebaseFirestore.instance.collection('users').doc(_user.uid).snapshots(),
                   builder: (ctx, AsyncSnapshot<DocumentSnapshot> chatSnapshot) {
                      if(chatSnapshot.connectionState == ConnectionState.waiting){
                         return Center(child: Text('Carregando...'));
                     } 
-                    return Text("${chatSnapshot.data['nome']}",style: TextStyle(fontWeight: FontWeight.w700, fontFamily: 'RobotoCondensed',color: Colors.white),);
+                    return Text("${chatSnapshot.data.get('nome')}",style: TextStyle(fontWeight: FontWeight.w700, fontFamily: 'RobotoCondensed',color: Colors.white),);
                   },
-                  
-                );
-              },
-            ),
+            ), 
 
-            accountEmail: FutureBuilder(
-              future: FirebaseAuth.instance.currentUser(),
-              builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-                if(snapshot.connectionState == ConnectionState.waiting){
-                  return Text('carregando...');
-                }
-                return Text(snapshot.data.email, style: TextStyle(color: Colors.grey[700], fontFamily: 'RobotoCondensed'));
-              },
-            ),
+            accountEmail: Text(_user.email, style: TextStyle(color: Colors.grey[700], fontFamily: 'RobotoCondensed')),
 
             otherAccountsPictures: [
               IconButton(
@@ -137,7 +105,7 @@ class MeuDrawer extends StatelessWidget {
                   titulo: 'Pefil',
                   subtitulo: 'Editar perfil, estado ou clube',
                   onTap: () {
-                    Navigator.of(context).pushNamed(ROTAS.PERFIL);
+                    Navigator.of(context).pushNamed(ROTAS.PERFIL, arguments: _user);
                     Scaffold.of(context).openDrawer();
                   },
                 ),

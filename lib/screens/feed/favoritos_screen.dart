@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scooter_rider_brasil/components/drawer.dart';
 
 class Favoritos extends StatelessWidget {
+  final User _user = FirebaseAuth.instance.currentUser;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +40,7 @@ class Favoritos extends StatelessWidget {
 
         //drawer: MeuDrawer(),
 
-       endDrawer: MeuDrawer(),
+       endDrawer: MeuDrawer(_user),
     );
   }
 }

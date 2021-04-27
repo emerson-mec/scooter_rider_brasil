@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scooter_rider_brasil/components/drawer.dart';
@@ -9,6 +10,9 @@ import '../../components/feed/card_feed_widget.dart';
 import '../../components/menu_bottom_widget.dart';
 
 class FeedScreen extends StatefulWidget {
+  final User _user;
+
+  FeedScreen(this._user);
   @override
   _FeedScreenState createState() => _FeedScreenState();
 }
@@ -71,9 +75,9 @@ class _FeedScreenState extends State<FeedScreen> {
         ),
       ),
       backgroundColor: Colors.grey[200],
-      bottomNavigationBar: MenuBottom(),
+      bottomNavigationBar: MenuBottom(widget._user),
       //drawer: MeuDrawer(),
-      endDrawer: MeuDrawer(),
+      endDrawer: MeuDrawer(widget._user),
     );
   }
 }

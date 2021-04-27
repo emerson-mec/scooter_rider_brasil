@@ -5,8 +5,8 @@ import '../models/feed_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FeedProvider with ChangeNotifier {
-  Firestore _db = Firestore.instance;
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseFirestore _db = FirebaseFirestore.instance;
+  final User _user = FirebaseAuth.instance.currentUser;
 
 
   Stream<List<FeedMODEL>> loadFeed([String estado = 'EstadosFeed.RJ']) {
@@ -14,24 +14,21 @@ class FeedProvider with ChangeNotifier {
     .collection('feed')
     .where("estado", whereIn: ['$estado', 'EstadosFeed.TODOS'])
     .snapshots()
-    .map((snapshot) =>
-        snapshot.documents.reversed 
-        .map((doc) => FeedMODEL.daAPI(doc.data))
-        .toList()
+    .map((snapshot) => snapshot.docs.reversed.map((doc) => FeedMODEL.daAPI(doc.data()))
+    .toList()
     );
   }
 
   Future<void> addFeed(FeedMODEL newFeed) async {
-    final FirebaseUser currentUser = await auth.currentUser();
 
     await _db
         .collection('feed')
         .add(newFeed.paraMap())
         .then((value) {
          //quando terminar os passos acima, retorne o ID para salvar.
-          value.updateData({
-            'idFeed': '${value.documentID}',
-            'autor': '${currentUser.email}',
+          value.update({
+            'idFeed': '${value.id}',
+            'autor': '${_user.email}',
           });
         }
         );
@@ -41,11 +38,11 @@ class FeedProvider with ChangeNotifier {
   Future<void> updateFeed(FeedMODEL feedItem) {
     return _db
         .collection('feed')
-        .document(feedItem.idFeed)
-        .updateData(feedItem.paraMap());
+        .doc(feedItem.idFeed)
+        .update(feedItem.paraMap());
   }
 
   Future<void> removeFeed(String idFeed) {
-    return _db.collection('feed').document(idFeed).delete();
+    return _db.collection('feed').doc(idFeed).delete();
   }
 }

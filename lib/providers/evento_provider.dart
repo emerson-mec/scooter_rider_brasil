@@ -5,79 +5,78 @@ import 'package:flutter/widgets.dart';
 import 'package:scooter_rider_brasil/models/evento_model.dart';
 
 class EventoProvider with ChangeNotifier {
-  Firestore _db = Firestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  final _db = FirebaseFirestore.instance;
+  final User _user = FirebaseAuth.instance.currentUser;
 
   Stream<List<EventoMODEL>> loadEvento(String idClubeDoUser) {
-    return _db.collection('evento')
-      .where('idClube', whereIn: ['$idClubeDoUser'])
-      .snapshots().map((snapshot) => snapshot.documents
-      .map((doc) => EventoMODEL.daAPI(doc.data))
-      .toList());
+    return _db
+        .collection('evento')
+        .where('idClube', whereIn: ['$idClubeDoUser'])
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => EventoMODEL.daAPI(doc.data()))
+        .toList());
   }
 
   Future<void> addEvento(EventoMODEL evento) async {
-    final FirebaseUser currentUser = await _auth.currentUser();
-    
     var user = await _db
         .collection('users')
-        .document(currentUser.uid)
+        .doc(_user.uid)
         .get()
         .then((value) => value);
 
     await _db.collection('evento').add(evento.paraJson()).then((value) {
       //quando terminar os passos acima, retorne o ID para salvar.
-      value.updateData({
-        'id': '${value.documentID}',
-        'autor': '${currentUser.email}',
+      value.update({
+        'id': '${value.id}',
+        'autor': '${_user.email}',
         'inscritos': {}, //precisa criar pra não quebrar
-        'idClube': '${user['idClube']}', 
+        'idClube': '${user.get('idClube')}',
       });
     });
   }
 
-  Future<void> updateEvento(EventoMODEL eventoItem) {
-    return _db
+  Future<void> updateEvento(EventoMODEL eventoItem) async {
+    return await _db
         .collection('evento')
-        .document(eventoItem.id)
-        .updateData(eventoItem.paraJson());
+        .doc(eventoItem.id)
+        .update(eventoItem.paraJson());
   }
 
   Future<void> removeFeed(String idEvento) {
-    return _db.collection('evento').document(idEvento).delete();
+    return _db.collection('evento').doc(idEvento).delete();
   }
 
-  Future<void> inscreverSe(String idEvento , [String resposta, bool garupa, bool amigo]) async {
-    FirebaseUser currentUser = await _auth.currentUser().then((value) => value);
+  Future<void> inscreverSe(String idEvento,
+      [String resposta, bool garupa, bool amigo]) async {
     var user = await _db
         .collection('users')
-        .document(currentUser.uid)
+        .doc(_user.uid)
         .get()
         .then((value) => value);
 
-    await Firestore.instance.collection('evento').document(idEvento).setData({
+    await FirebaseFirestore.instance.collection('evento').doc(idEvento).set({
       'inscritos': {
-        "${currentUser.uid}": {
-          'nome': '${user["nome"]}' ?? '',
-          'id': '${user["id"]}' ?? '',
-          'pontoEncontro' : resposta ?? '',
-          'garupa' : garupa ?? false,
-          'amigo' : amigo ?? false,
-          'urlAvatar' : user['urlAvatar'] ?? null,
-          'dataInscricao' : Timestamp.now(),
+        "${_user.uid}": {
+          'nome': '${user.get('nome')}' ?? '',
+          'id': '${_user.uid}' ?? '',
+          'pontoEncontro': resposta ?? '',
+          'garupa': garupa ?? false,
+          'amigo': amigo ?? false,
+          'urlAvatar': user.get('urlAvatar') ?? null,
+          'dataInscricao': Timestamp.now(),
         }
-      }
-    }, merge: true);
+      },
+    }, SetOptions(merge: true));
   }
 
   Future<void> removerInscricao(String idEvento) async {
-    FirebaseUser currentUser = await _auth.currentUser().then((value) => value);
+    var doc = FirebaseFirestore.instance.collection('evento').doc(idEvento);
 
-    var doc = Firestore.instance.collection('evento').document(idEvento);
-
-    await doc.setData({
-      'inscritos': {"${currentUser.uid}": FieldValue.delete()}
-    }, merge: true);
+    await doc.set(
+      {
+        'inscritos': {"${_user.uid}": FieldValue.delete()}
+      },
+      SetOptions(merge: true),
+    );
   }
 }

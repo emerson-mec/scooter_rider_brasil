@@ -83,8 +83,8 @@ class _AlertInscricaoState extends State<AlertInscricao> {
           ),
           onPressed: () => Navigator.of(context).pop(false),
         ),
-        FutureBuilder(
-          future: authProvider.user(),
+        StreamBuilder(
+          stream: authProvider.userColecao(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(

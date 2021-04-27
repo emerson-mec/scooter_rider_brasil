@@ -1,7 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scooter_rider_brasil/utils/rotas.dart';
 
 class MenuBottom extends StatelessWidget {
+  
+  final User _user;
+
+  MenuBottom(this._user);
+
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
@@ -30,7 +36,7 @@ class MenuBottom extends StatelessWidget {
                 Icons.create_rounded,
                 color: Colors.yellow[800],
               ),
-              onPressed: () => Navigator.of(context).pushNamed(ROTAS.EVENTOS),
+              onPressed: () => Navigator.of(context).pushNamed(ROTAS.EVENTOS, arguments: _user),
             ),
           ),
           // Expanded(

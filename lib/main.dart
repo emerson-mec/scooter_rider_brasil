@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scooter_rider_brasil/providers/auth_provider.dart';
@@ -20,7 +21,12 @@ import 'screens/gerenciar_screen.dart';
 import 'screens/eventos/eventos_screen.dart';
 import 'screens/feed/feed_screen.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -69,10 +75,11 @@ class MyApp extends StatelessWidget {
               ),
         ),
         home: StreamBuilder(
-            stream: FirebaseAuth.instance.onAuthStateChanged,
+            stream: FirebaseAuth.instance.authStateChanges(),
             builder: (ctx, userSnapshot) {
               if (userSnapshot.hasData) {
-                return FeedScreen();
+                final User _user = FirebaseAuth.instance.currentUser;
+                return FeedScreen(_user);
               } else {
                 return AuthScreen();
               }

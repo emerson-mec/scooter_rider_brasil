@@ -1,22 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:scooter_rider_brasil/models/clube_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClubeProvider with ChangeNotifier {
-  final Firestore _db = Firestore.instance;
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
 
   Stream<List<ClubeMODEL>> loadClube([String estado]) {
-    return _db
-        .collection('clube')
-        .where("estado", whereIn: ['$estado'])
-        .snapshots()
-        .map((snapshot) => snapshot.documents.reversed
-            .map((doc) => ClubeMODEL.fromMap(doc.data))
-            .toList());
+    return _db.collection('clube')
+        .where("estado", whereIn: ['$estado']).snapshots()
+        .map((snapshot) => snapshot.docs.reversed.map((doc) => ClubeMODEL.fromMap(doc.data()))
+        .toList());
   }
 
   // Future<void> addFeed(FeedMODEL newFeed) async {

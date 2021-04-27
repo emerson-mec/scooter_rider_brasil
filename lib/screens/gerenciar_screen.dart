@@ -88,8 +88,8 @@ class _GerenciarScreenState extends State<GerenciarScreen> {
         ],
       ),
       
-      body: FutureBuilder(
-        future: authProvider.user(),
+      body: StreamBuilder(
+        stream: authProvider.userColecao(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

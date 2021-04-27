@@ -18,17 +18,17 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _isLoading = false;
 
   Future<void> _submitForm(AuthModel authData) async {
-    AuthResult authResult;
+    UserCredential  userCredential;
 
     setState(() => _isLoading = true);
     try {
       if (authData.isLogin) {
-        authResult = await _auth.signInWithEmailAndPassword(
+        userCredential = await _auth.signInWithEmailAndPassword(
           email: authData.emailUser.trim(),
           password: authData.password,
         );
       } else {
-        authResult = await _auth.createUserWithEmailAndPassword(
+        userCredential = await _auth.createUserWithEmailAndPassword(
           email: authData.emailUser.trim(),
           password: authData.password,
         );
@@ -36,25 +36,25 @@ class _AuthScreenState extends State<AuthScreen> {
         final ref = FirebaseStorage.instance
           .ref()
           .child('user_avatar')
-          .child(authResult.user.uid + '.jpg'); 
+          .child(userCredential.user.uid + '.jpg'); 
 
-        await ref.putFile(authData.image).onComplete;
+        await ref.putFile(authData.image);
         final url = await ref.getDownloadURL();
 
         final userData = {
           'nome': authData.name,
           'estado': authData.estado.toString(),
           'email': authData.emailUser,
-          'id': authResult.user.uid,
+          'id': userCredential.user.uid,
           'urlAvatar': url,
           'dataCadastro': Timestamp.now(),
           //'tipoUser': 'comum',
         };
 
-        await Firestore.instance
+        await FirebaseFirestore.instance
             .collection('users')
-            .document(authResult.user.uid)
-            .setData(userData);
+            .doc(userCredential.user.uid)
+            .set(userData);
       }
     } on PlatformException catch (err) {
       var msg;

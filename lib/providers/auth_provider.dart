@@ -3,31 +3,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthProvider with ChangeNotifier {
-  final _auth = FirebaseAuth.instance;
-  final _colecao = Firestore.instance;
+  final _auth = FirebaseAuth.instance.currentUser;
+  final _colecao = FirebaseFirestore.instance;
   String estadoUserr;
 
-  Future<DocumentSnapshot> user() async {
-    var uid = await _auth.currentUser().then((value) => value.uid);
-    return await _colecao.collection('users').document(uid).get();
+  Stream<DocumentSnapshot> userColecao() {
+    return _colecao.collection('users').doc(_auth.uid).snapshots();
   }
 
- estadoUser() async {
-    var uid = await _auth.currentUser().then((value) => value.uid);
-
-    String estado = await _colecao.collection('users')
-        .document(uid)
+  Future<String> estadoUser() async {
+    String estado = await _colecao
+        .collection('users')
+        .doc(_auth.uid)
         .get()
-        .then((event) => event.data['estado']);
+        .then((event) async => await event.get('estado'));
 
     return estado;
   }
-
-
-Future<String> emailUser() async {
-    var uid = await _auth.currentUser().then((value) => value.uid);
-    var user = _colecao.collection('users').document(uid).get();
-    String email = await user.then((value) => value['email']);
-    return email;
-  }
-  }
+}
