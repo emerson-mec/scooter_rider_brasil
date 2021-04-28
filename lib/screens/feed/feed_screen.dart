@@ -10,9 +10,6 @@ import '../../components/feed/card_feed_widget.dart';
 import '../../components/menu_bottom_widget.dart';
 
 class FeedScreen extends StatefulWidget {
-  final User _user;
-
-  FeedScreen(this._user);
   @override
   _FeedScreenState createState() => _FeedScreenState();
 }
@@ -20,6 +17,9 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
+
+    final User _user = FirebaseAuth.instance.currentUser;
+    
     FeedProvider feedProvider = Provider.of<FeedProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
@@ -75,9 +75,9 @@ class _FeedScreenState extends State<FeedScreen> {
         ),
       ),
       backgroundColor: Colors.grey[200],
-      bottomNavigationBar: MenuBottom(widget._user),
+      bottomNavigationBar: MenuBottom(_user),
       //drawer: MeuDrawer(),
-      endDrawer: MeuDrawer(widget._user),
+      endDrawer: MeuDrawer(_user),
     );
   }
 }

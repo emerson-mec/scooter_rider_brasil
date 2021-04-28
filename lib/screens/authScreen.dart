@@ -3,6 +3,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scooter_rider_brasil/components/auth/authForm.dart';
+import 'package:scooter_rider_brasil/exceptions/auth_exceptions.dart';
+import 'package:scooter_rider_brasil/exceptions/http_exceptions.dart';
 import 'package:scooter_rider_brasil/models/auth_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -56,49 +58,20 @@ class _AuthScreenState extends State<AuthScreen> {
             .doc(userCredential.user.uid)
             .set(userData);
       }
-    } on PlatformException catch (err) {
-      var msg;
-      // final msg = err.message ?? 'Ocorreu um erro! Verifique suas credencias.';
-      switch (err.code) {
-        case 'ERROR_WRONG_PASSWORD':
-          msg = 'Senha errada';
-          break;
-        case 'ERROR_USER_DISABLED':
-          msg =
-              'Usuário desativado pelo administrador. Entre em contato com scooterriderbrasil@gmail.com';
-          break;
-        case 'ERROR_TOO_MANY_REQUESTS':
-          msg =
-              'Muitas tentativas. Fale conosco pelo e-mail: scooterriderbrasil@gmail.com ou tente tente mais tarde!';
-          break;
-        case 'ERROR_INVALID_EMAIL':
-          msg = 'Endereço de e-mail inválido';
-          break;
-        case 'ERROR_USER_NOT_FOUND':
-          msg = 'Usuário não encontrado';
-          break;
-        case 'ERROR_OPERATION_NOT_ALLOWED':
-          msg = 'Ocorreu um erro na autenticação.';
-          break;
-        case 'ERROR_WEAK_PASSWORD':
-          msg = 'Senha fraca.';
-          break;
-        case 'ERROR_INVALID_EMAIL':
-          msg = 'Endereço de e-mail incorreto.';
-          break;
-        case 'ERROR_EMAIL_ALREADY_IN_USE':
-          msg = 'E-mail já está sendo usado.';
-          break;
-        default:
-          msg = 'Tentativa de autenticação falhou.';
-      }
+    } on FirebaseAuthException catch (err) {
+      print('======= ${err.code}');
+      
+      var msg = AuthException(err.code);
+      
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(msg),
+        content: Text(msg.toString()),
         backgroundColor: Theme.of(context).errorColor,
         duration: Duration(seconds: 7),
       ));
+    
     } catch (err) {
       print('=>>>>>$err');
+      
     } finally {
       setState(() => _isLoading = false);
     }

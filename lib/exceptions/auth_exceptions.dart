@@ -1,14 +1,14 @@
 class AuthException implements Exception {
   static const Map<String, String> errors = {
-    "EMAIL_EXISTS": "O endereço de e-mail já está sendo usado por outra conta.",
-    "OPERATION_NOT_ALLOWED": "Login e senha está desativado para você.",
-    "TOO_MANY_ATTEMPTS_TRY_LATER":"Bloqueamos todas as solicitações deste dispositivo devido a atividade incomum.",
-    "EMAIL_NOT_FOUND": "Não há registro de usuário correspondente a este identificador. O usuário pode ter sido excluído.",
-    "INVALID_PASSWORD": "A senha é inválida ou o usuário não possui uma senha.",
-    "USER_DISABLED": "A conta do usuário foi desabilitada por um administrador.",
+    'email-already-in-use': 'Já existe uma conta com esse e-mail.',
+    'operation-not-allowed': 'Conta não ativada.',
+    'weak-password': 'Senha muito fraca.',
+    'user-not-found': 'E-mail inválido.',
+    'invalid-email': 'E-mail inválido.',
+    'too-many-requests': 'Muitas tentativas. tenta mais tarde',
 
     //a partir do FiresStone
-    'ERROR_OPERATION_NOT_ALLOWED' : 'contas de e-mail e senha não estão ativadas',
+    'ERROR_OPERATION_NOT_ALLOWED':'contas de e-mail e senha não estão ativadas',
   };
 
   final String key;
@@ -23,4 +23,3 @@ class AuthException implements Exception {
     }
   }
 }
-
