@@ -91,8 +91,8 @@ class MeuDrawer extends StatelessWidget {
                   Icons.login,
                   color: Colors.grey[100],
                 ),
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
+                onPressed: () async {
+                 await FirebaseAuth.instance.signOut();
                 } 
               ),
             ],

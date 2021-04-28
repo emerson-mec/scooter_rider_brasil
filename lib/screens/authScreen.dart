@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:scooter_rider_brasil/components/auth/authForm.dart';
 import 'package:scooter_rider_brasil/exceptions/auth_exceptions.dart';
-import 'package:scooter_rider_brasil/exceptions/http_exceptions.dart';
 import 'package:scooter_rider_brasil/models/auth_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

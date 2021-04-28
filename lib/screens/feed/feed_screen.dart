@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,13 +16,15 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
+
+
   @override
   Widget build(BuildContext context) {
-
     final User _user = FirebaseAuth.instance.currentUser;
-    
     FeedProvider feedProvider = Provider.of<FeedProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+     
 
     return Scaffold(
       appBar: AppBar(
@@ -44,14 +47,14 @@ class _FeedScreenState extends State<FeedScreen> {
             ],
           ),
         ),
-        child: FutureBuilder(
-          future: authProvider.estadoUser(),
+        child: StreamBuilder(
+          stream: authProvider.userColecao(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             }
-
-            String estado = snapshot.data;
+            //snapshot.data.clear();
+            final String estado = snapshot.data['estado'];
 
             return StreamBuilder(
               stream: feedProvider.loadFeed('EstadosFeed.$estado'),
@@ -59,7 +62,6 @@ class _FeedScreenState extends State<FeedScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 }
-
                 List<FeedMODEL> feedRAW = snapshot.data;
 
                 return ListView.builder(

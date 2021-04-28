@@ -10,6 +10,8 @@ class FeedProvider with ChangeNotifier {
 
 
   Stream<List<FeedMODEL>> loadFeed([String estado = 'EstadosFeed.RJ']) {
+//    FirebaseFirestore.instance.terminate();
+// FirebaseFirestore.instance.clearPersistence();
     return _db
     .collection('feed')
     .where("estado", whereIn: ['$estado', 'EstadosFeed.TODOS'])
@@ -17,7 +19,9 @@ class FeedProvider with ChangeNotifier {
     .map((snapshot) => snapshot.docs.reversed.map((doc) => FeedMODEL.daAPI(doc.data()))
     .toList()
     );
+
   }
+
 
   Future<void> addFeed(FeedMODEL newFeed) async {
 

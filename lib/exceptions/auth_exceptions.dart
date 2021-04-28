@@ -6,6 +6,7 @@ class AuthException implements Exception {
     'user-not-found': 'E-mail inválido.',
     'invalid-email': 'E-mail inválido.',
     'too-many-requests': 'Muitas tentativas. tenta mais tarde',
+    'user-disabled': 'Sua conta foi desabilitada. Fale com scooter.rider.brasil@gmail.com',
 
     //a partir do FiresStone
     'ERROR_OPERATION_NOT_ALLOWED':'contas de e-mail e senha não estão ativadas',

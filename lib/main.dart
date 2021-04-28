@@ -78,6 +78,7 @@ class MyApp extends StatelessWidget {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (ctx, userSnapshot) {
               if (userSnapshot.hasData) {
+                FirebaseAuth.instance.currentUser.reload();
                 return FeedScreen();
               } else {
                 return AuthScreen();

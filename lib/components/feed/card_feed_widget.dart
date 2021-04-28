@@ -16,6 +16,7 @@ class CardFeedWIDGET extends StatefulWidget {
 }
 
 class _CardFeedWIDGETState extends State<CardFeedWIDGET> {
+  
   // _favoritos(FeedMODEL item, Auth auth) {
   //   return item.favorito
   //       ? IconButton(

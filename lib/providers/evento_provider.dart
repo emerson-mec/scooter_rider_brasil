@@ -15,6 +15,7 @@ class EventoProvider with ChangeNotifier {
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => EventoMODEL.daAPI(doc.data()))
         .toList());
+        
   }
 
   Future<void> addEvento(EventoMODEL evento) async {

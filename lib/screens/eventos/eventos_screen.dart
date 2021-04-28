@@ -16,6 +16,7 @@ class EventoScreen extends StatefulWidget {
 class _EventoScreenState extends State<EventoScreen> {
   @override
   Widget build(BuildContext context) {
+                  
     EventoProvider eventoProvider = Provider.of<EventoProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     final _auth = ModalRoute.of(context).settings.arguments as User;
