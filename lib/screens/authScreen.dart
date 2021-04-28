@@ -40,7 +40,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
         await ref.putFile(authData.image);
         final url = await ref.getDownloadURL();
-
+ 
         final userData = {
           'nome': authData.name,
           'estado': authData.estado.toString(),

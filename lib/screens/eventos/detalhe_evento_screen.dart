@@ -150,8 +150,7 @@ class _DetalheEventoState extends State<DetalheEvento> {
                     ),
 
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 30),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,9 +230,8 @@ class _DetalheEventoState extends State<DetalheEvento> {
                           //INSCRITOS NA LISTA DE PRESENÇA
                           Container(
                             color: Colors.blueGrey[100],
-                            height: 250,
+                            height: 300,
                             child: StreamBuilder(
-                              initialData: Text('Carregando'),
                               stream: FirebaseFirestore.instance.collection('evento').doc(eventoModalRoute.id).snapshots(),
                               builder: (BuildContext context, AsyncSnapshot snapshot) {
                                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -252,8 +250,8 @@ class _DetalheEventoState extends State<DetalheEvento> {
 
                                 //print(snapshot.data['inscritos']['m2p0BmXZUoSRVOnxRa2Vwgoy3v82'] != true);
 
-                                List snap =snapshot.data['inscritos'].values.toList();
-
+                                List snap = snapshot.data['inscritos'].values.toList();
+ 
                                 return Column(
                                   children: [
                                     Container(
@@ -261,10 +259,10 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                       padding: EdgeInsets.all(8),
                                       child: Row(
                                         children: [
-                                          Expanded(flex: 11, child: Text(' Nome',style: TextStyle(color: Colors.white))),
-                                          Container(width: 55, child: Text('Com\ngarupa?',textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 12))),
+                                          Expanded(flex: 11, child: const Text( ' Nome',style: TextStyle(color: Colors.white))),
+                                          Container(width: 55, child: const Text('Com\ngarupa?',textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 12))),
                                           VerticalDivider(),
-                                          Container(width: 65, child: Text('Convidou\nalguém?',textAlign: TextAlign.center, style: TextStyle(color: Colors.white,fontSize: 12))),
+                                          Container(width: 65, child: const Text('Convidou\nalguém?',textAlign: TextAlign.center, style: TextStyle(color: Colors.white,fontSize: 12))),
                                         ],
                                       ),
                                     ),
@@ -285,10 +283,10 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                                 children: [
                                                   Text('${i + 1} '),
                                                   Padding(
-                                                    padding: const EdgeInsets.only(left: 2,right: 8,bottom: 5,top: 5),
+                                                    padding: const EdgeInsets.only(left: 1,right: 6,bottom: 5,top: 5),
                                                     child: CircleAvatar(
                                                       backgroundColor: Colors.grey,
-                                                      maxRadius: 13,
+                                                      maxRadius: 14,
                                                       backgroundImage: urlAvatar != null ? NetworkImage(urlAvatar) : AssetImage(Constantes.SEM_AVATAR),
                                                     ),
                                                   ),
