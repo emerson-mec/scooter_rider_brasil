@@ -53,8 +53,7 @@ class _AlertInscricaoState extends State<AlertInscricao> {
                         garupa = value;
                       });
                     }),
-                Text('Vou com garupa',
-                    style: TextStyle(color: Colors.blueGrey[700])),
+                Text('Vou com garupa',style: TextStyle(color: Colors.blueGrey[700])),
               ],
             ),
             Row(

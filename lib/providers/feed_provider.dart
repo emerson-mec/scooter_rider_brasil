@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FeedProvider with ChangeNotifier {
   FirebaseFirestore _db = FirebaseFirestore.instance;
-  final User _user = FirebaseAuth.instance.currentUser;
+  
 
 
   Stream<List<FeedMODEL>> loadFeed([String estado = 'EstadosFeed.RJ']) {
@@ -24,14 +24,16 @@ class FeedProvider with ChangeNotifier {
 
 
   Future<void> addFeed(FeedMODEL newFeed) async {
+  
+  final User _user = FirebaseAuth.instance.currentUser;
 
     await _db
         .collection('feed')
         .add(newFeed.paraMap())
-        .then((value) {
+        .then((feed) {
          //quando terminar os passos acima, retorne o ID para salvar.
-          value.update({
-            'idFeed': '${value.id}',
+          feed.update({
+            'idFeed': '${feed.id}',
             'autor': '${_user.email}',
           });
         }

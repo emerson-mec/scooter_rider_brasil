@@ -76,8 +76,8 @@ class MeuDrawer extends StatelessWidget {
             accountName: StreamBuilder(
                   stream: FirebaseFirestore.instance.collection('users').doc(_user.uid).snapshots(),
                   builder: (ctx, AsyncSnapshot<DocumentSnapshot> chatSnapshot) {
-                     if(chatSnapshot.connectionState == ConnectionState.waiting){
-                        return Center(child: Text('Carregando...'));
+                    if(chatSnapshot.connectionState == ConnectionState.waiting){
+                      return Center(child: Text('Carregando...'));
                     } 
                     return Text("${chatSnapshot.data.get('nome')}",style: TextStyle(fontWeight: FontWeight.w700, fontFamily: 'RobotoCondensed',color: Colors.white),);
                   },

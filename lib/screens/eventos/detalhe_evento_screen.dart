@@ -34,6 +34,7 @@ class _DetalheEventoState extends State<DetalheEvento> {
         title: Image.asset('assets/logo_srb3.png', scale: 3.2),
         centerTitle: true,
       ),
+      
       body: Container(
         decoration: BoxDecoration(
           color: Colors.red,
@@ -261,9 +262,9 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                       child: Row(
                                         children: [
                                           Expanded(flex: 11, child: Text(' Nome',style: TextStyle(color: Colors.white))),
-                                          Container(width: 51, child: Text('Com\ngarupa?',textAlign: TextAlign.center,style: TextStyle(color: Colors.white))),
+                                          Container(width: 55, child: Text('Com\ngarupa?',textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 12))),
                                           VerticalDivider(),
-                                          Container(width: 59, child: Text('Convidou\nalguém?',textAlign: TextAlign.center, style: TextStyle(color: Colors.white))),
+                                          Container(width: 65, child: Text('Convidou\nalguém?',textAlign: TextAlign.center, style: TextStyle(color: Colors.white,fontSize: 12))),
                                         ],
                                       ),
                                     ),
@@ -274,6 +275,7 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                         itemCount: snap.length,
                                         itemBuilder: (context, i) {
                                          String urlAvatar = snap[i]['urlAvatar'];
+                                         print(urlAvatar == '');
 
                                           return Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,6 +283,7 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
+                                                  Text('${i + 1} '),
                                                   Padding(
                                                     padding: const EdgeInsets.only(left: 2,right: 8,bottom: 5,top: 5),
                                                     child: CircleAvatar(
@@ -294,13 +297,13 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                                       child: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        Text(snap[i]['nome'] ?? '', style: TextStyle(color:Colors.blueGrey[800],fontWeight: FontWeight.w500),),
+                                                        Container(child: Text(snap[i]['nome'] ?? '', style: TextStyle(color:Colors.blueGrey[800],fontWeight: FontWeight.w500),)),
                                                         Text(snap[i]['pontoEncontro'] ?? '', style: TextStyle(color:Colors.grey[500],fontWeight: FontWeight.w400),),
                                                       ],
                                                     ),
                                                   ),
                                                   Container(width: 60, child: 
-                                                    Text(snap[i]['garupa'].toString().contains('true') ? '   Sim' : '   Não',
+                                                    Text(snap[i]['garupa'].toString().contains('true') ? ' Sim' : ' Não',
                                                    style: TextStyle(color:Colors.blueGrey[700],),)),
 
                                                   Container(width: 60, child: 
@@ -308,13 +311,12 @@ class _DetalheEventoState extends State<DetalheEvento> {
                                                   style: TextStyle(color:Colors.blueGrey[700]),)),
                                                 ],
                                               ),
-                                              Divider(height: 8,color: Colors.black45),
+                                              Divider(height: 8,color: Colors.black54),
                                             ],
                                           );
                                         },
                                       ),
                                     ),
-                                    Container(child: Text('${snap.length} inscritos',style: TextStyle(color: Colors.blueGrey[300]))),
                                   ],
                                 );
                               },

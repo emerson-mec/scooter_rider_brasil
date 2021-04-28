@@ -46,8 +46,7 @@ class EventoProvider with ChangeNotifier {
     return _db.collection('evento').doc(idEvento).delete();
   }
 
-  Future<void> inscreverSe(String idEvento,
-      [String resposta, bool garupa, bool amigo]) async {
+  Future<void> inscreverSe(String idEvento,[String resposta, bool garupa, bool amigo]) async {
     final User _user = FirebaseAuth.instance.currentUser;
     var user = await _db
         .collection('users')
