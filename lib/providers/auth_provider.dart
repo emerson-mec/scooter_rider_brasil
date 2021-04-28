@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthProvider with ChangeNotifier {
-  final _auth = FirebaseAuth.instance.currentUser;
-  final _colecao = FirebaseFirestore.instance;
-
+  
+  final _db = FirebaseFirestore.instance;
+  
   Stream<DocumentSnapshot> userColecao() {
-   return _colecao.collection('users').doc(_auth.uid).snapshots();
-     //colecao.map((event) => print(event['estado']));
+    final User _auth = FirebaseAuth.instance.currentUser;
+    return _db.collection('users').doc(_auth.uid).snapshots();
   }
 
 }

@@ -6,19 +6,18 @@ import 'package:scooter_rider_brasil/models/evento_model.dart';
 
 class EventoProvider with ChangeNotifier {
   final _db = FirebaseFirestore.instance;
-  final User _user = FirebaseAuth.instance.currentUser;
 
   Stream<List<EventoMODEL>> loadEvento(String idClubeDoUser) {
     return _db
         .collection('evento')
         .where('idClube', whereIn: ['$idClubeDoUser'])
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => EventoMODEL.daAPI(doc.data()))
-        .toList());
-        
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => EventoMODEL.daAPI(doc.data())).toList());
   }
 
   Future<void> addEvento(EventoMODEL evento) async {
+    final User _user = FirebaseAuth.instance.currentUser;
     var user = await _db
         .collection('users')
         .doc(_user.uid)
@@ -49,6 +48,7 @@ class EventoProvider with ChangeNotifier {
 
   Future<void> inscreverSe(String idEvento,
       [String resposta, bool garupa, bool amigo]) async {
+    final User _user = FirebaseAuth.instance.currentUser;
     var user = await _db
         .collection('users')
         .doc(_user.uid)
@@ -71,6 +71,7 @@ class EventoProvider with ChangeNotifier {
   }
 
   Future<void> removerInscricao(String idEvento) async {
+    final User _user = FirebaseAuth.instance.currentUser;
     var doc = FirebaseFirestore.instance.collection('evento').doc(idEvento);
 
     await doc.set(
