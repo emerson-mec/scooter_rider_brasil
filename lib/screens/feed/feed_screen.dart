@@ -10,6 +10,9 @@ import '../../components/feed/card_feed_widget.dart';
 import '../../components/menu_bottom_widget.dart';
 
 class FeedScreen extends StatefulWidget {
+  final User _user;
+  FeedScreen(this._user);
+
   @override
   _FeedScreenState createState() => _FeedScreenState();
 }
@@ -19,12 +22,9 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final User _user = FirebaseAuth.instance.currentUser;
     FeedProvider feedProvider = Provider.of<FeedProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
      
-
     return Scaffold(
       appBar: AppBar(
         actions: [Icon(Icons.menu, color: Colors.white), ],
@@ -54,7 +54,6 @@ class _FeedScreenState extends State<FeedScreen> {
             }
             //snapshot.data.clear();
             final String estado = snapshot.data['estado'];
-            print(snapshot.data['estado']);
 
             return StreamBuilder(
               stream: feedProvider.loadFeed('EstadosFeed.$estado'),
@@ -77,9 +76,9 @@ class _FeedScreenState extends State<FeedScreen> {
         ),
       ),
       backgroundColor: Colors.grey[200],
-      bottomNavigationBar: MenuBottom(_user),
+      bottomNavigationBar: MenuBottom(widget._user),
       //drawer: MeuDrawer(),
-      endDrawer: MeuDrawer(_user),
+      endDrawer: MeuDrawer(widget._user),
     );
   }
 }
