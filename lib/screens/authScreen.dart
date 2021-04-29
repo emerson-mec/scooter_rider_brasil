@@ -127,19 +127,22 @@ class _AuthScreenState extends State<AuthScreen> {
                       Positioned.fill(
                         child: Container(
                           margin: EdgeInsets.symmetric(horizontal: 20),
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(0, 0, 0, 0.7)),
+                          decoration: BoxDecoration(color: Color.fromRGBO(0, 0, 0, 0.8)),
                           child: Padding(
                             padding: const EdgeInsets.all(98.0),
-                            child: Stack(fit: StackFit.expand, children: [
-                              CircularProgressIndicator(),
-                              Positioned(
-                                  top: 80,
-                                  left: 45,
-                                  child: Text(
+                            child: Stack(fit: StackFit.loose, children: [
+                              Center(child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(),
+                                  SizedBox(height: 20),
+                                  Text(
                                     'Carregando...',
                                     style: TextStyle(color: Colors.white70),
-                                  ))
+                                  )
+                                ],
+                              )),
+                              
                             ]),
                           ),
                         ),
